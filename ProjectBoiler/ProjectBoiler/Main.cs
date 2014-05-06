@@ -21,7 +21,7 @@ namespace ProjectBoiler
         private void Main_Load(object sender, EventArgs e)
         {
             var problems = from t in Assembly.GetAssembly(typeof(BoiledProblems.Problem1)).GetTypes()
-                           //where t.IsClass && t.Name.StartsWith("Problem") && t.Namespace == "BoiledProblems"
+                           where t.IsClass && t.Name.StartsWith("Problem")
                            select t;
 
             foreach (var p in problems)
@@ -31,5 +31,11 @@ namespace ProjectBoiler
             treeView1.ExpandAll();
 
         }
+
+        private void btnSolve_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(richTextBox1.Rtf);
+        }
+
     }
 }
