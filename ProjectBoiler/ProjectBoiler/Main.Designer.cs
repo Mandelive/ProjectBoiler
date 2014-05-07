@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("BoiledProblems");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("BoiledProblems");
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.tvProblems = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnSolve = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.consoleBrowser = new System.Windows.Forms.WebBrowser();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -58,7 +58,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.consoleBrowser);
             this.splitContainer1.Size = new System.Drawing.Size(1008, 538);
             this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 1;
@@ -72,7 +72,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer2.Panel1.Controls.Add(this.tvProblems);
             // 
             // splitContainer2.Panel2
             // 
@@ -81,17 +81,17 @@
             this.splitContainer2.SplitterDistance = 258;
             this.splitContainer2.TabIndex = 0;
             // 
-            // treeView1
+            // tvProblems
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            treeNode2.Name = "BoiledProblems";
-            treeNode2.Text = "BoiledProblems";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
-            this.treeView1.Size = new System.Drawing.Size(200, 258);
-            this.treeView1.TabIndex = 0;
+            this.tvProblems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvProblems.Location = new System.Drawing.Point(0, 0);
+            this.tvProblems.Name = "tvProblems";
+            treeNode1.Name = "BoiledProblems";
+            treeNode1.Text = "BoiledProblems";
+            this.tvProblems.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.tvProblems.Size = new System.Drawing.Size(200, 258);
+            this.tvProblems.TabIndex = 0;
             // 
             // panel1
             // 
@@ -112,17 +112,15 @@
             this.btnSolve.UseVisualStyleBackColor = true;
             this.btnSolve.Click += new System.EventHandler(this.btnSolve_Click);
             // 
-            // richTextBox1
+            // consoleBrowser
             // 
-            this.richTextBox1.BackColor = System.Drawing.Color.Black;
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.ForeColor = System.Drawing.Color.White;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(804, 538);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.consoleBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.consoleBrowser.Location = new System.Drawing.Point(0, 0);
+            this.consoleBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.consoleBrowser.Name = "consoleBrowser";
+            this.consoleBrowser.Size = new System.Drawing.Size(804, 538);
+            this.consoleBrowser.TabIndex = 1;
+            this.consoleBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.consoleBrowser_DocumentCompleted);
             // 
             // Main
             // 
@@ -150,9 +148,9 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView tvProblems;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button btnSolve;
+        private System.Windows.Forms.WebBrowser consoleBrowser;
     }
 }
