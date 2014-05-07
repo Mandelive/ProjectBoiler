@@ -13,7 +13,7 @@ namespace BoiledProblems
             @"TXVsdGlwbGVzIG9mIDMgYW5kIDU=", 
             @"SWYgd2UgbGlzdCBhbGwgdGhlIG5hdHVyYWwgbnVtYmVycyBiZWxvdyAxMCB0aGF0IGFyZSBtdWx0aXBsZXMgb2YgMyBvciA1LCB3ZSBnZXQgMywgNSwgNiBhbmQgOS4gVGhlIHN1bSBvZiB0aGVzZSBtdWx0aXBsZXMgaXMgMjMuDQoNCkZpbmQgdGhlIHN1bSBvZiBhbGwgdGhlIG11bHRpcGxlcyBvZiAzIG9yIDUgYmVsb3cgMTAwMC4=",
             new string[] {
-                "n:num - find the sum of all the multiple below this number"
+                "n:num - find the sum of the corresponding multiples below this number"
             },
             new string[] {
                 "1000"
@@ -22,7 +22,25 @@ namespace BoiledProblems
 
         public override string Solve(string[] parameters)
         {
-            throw new NotImplementedException("TODO");
+            long n = Int64.Parse(parameters[0]);
+            return findSumOfThreeFiveMultiples(n).ToString();
+        }
+
+        private long findSumOfThreeFiveMultiples(long n)
+        {
+            n--;
+
+            var threes = n / 3;
+            var fives = n / 5;
+            var fifteens = n / 15;
+
+            var sumOfThrees = 3 * (threes * (threes + 1)) / 2;
+            var sumOfFives = 5 * (fives * (fives + 1)) / 2;
+            var sumOfFifteens = 15 * (fifteens * (fifteens + 1)) / 2;
+
+            var result = sumOfThrees + sumOfFives - sumOfFifteens;
+
+            return result;
         }
     }
 }

@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EC8D8876-75DE-4306-82AB-CF614C41059E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{D4F1639B-235A-429E-B6F8-881D0DC8010C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoiledProblems</RootNamespace>
-    <AssemblyName>BoiledProblems</AssemblyName>
+    <RootNamespace>BoiledDebugger</RootNamespace>
+    <AssemblyName>BoiledDebugger</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,12 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseProblem.cs" />
-    <Compile Include="Problem3.cs" />
-    <Compile Include="Problem2.cs" />
-    <Compile Include="IProblem.cs" />
-    <Compile Include="Problem1.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BoiledProblems\BoiledProblems.csproj">
+      <Project>{ec8d8876-75de-4306-82ab-cf614c41059e}</Project>
+      <Name>BoiledProblems</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Boilerplate\Boilerplate.csproj">
+      <Project>{0250cab5-bd64-4a46-a061-d802dd7429a2}</Project>
+      <Name>Boilerplate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

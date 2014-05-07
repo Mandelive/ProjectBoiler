@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boilerplate", "Boilerplate\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoiledProblems", "BoiledProblems\BoiledProblems.csproj", "{EC8D8876-75DE-4306-82AB-CF614C41059E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoiledDebugger", "BoiledDebugger\BoiledDebugger.csproj", "{D4F1639B-235A-429E-B6F8-881D0DC8010C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{EC8D8876-75DE-4306-82AB-CF614C41059E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC8D8876-75DE-4306-82AB-CF614C41059E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC8D8876-75DE-4306-82AB-CF614C41059E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4F1639B-235A-429E-B6F8-881D0DC8010C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4F1639B-235A-429E-B6F8-881D0DC8010C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4F1639B-235A-429E-B6F8-881D0DC8010C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4F1639B-235A-429E-B6F8-881D0DC8010C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
