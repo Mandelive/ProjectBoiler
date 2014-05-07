@@ -9,6 +9,7 @@ namespace BoiledProblems
     public interface IProblem
     {
         int GetID();
+        string GetTitle();
         string GetDescription();
         string[] GetParametersInfo();
         string[] GetDefaultParameters();
