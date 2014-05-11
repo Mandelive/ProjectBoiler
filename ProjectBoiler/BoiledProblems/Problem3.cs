@@ -46,7 +46,7 @@ namespace BoiledProblems
                 }
                 else
                 {
-                    toggle++;   
+                    toggle++;
                 }
             }
             return result;

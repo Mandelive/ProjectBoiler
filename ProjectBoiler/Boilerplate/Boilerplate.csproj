@@ -39,7 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoilConstants.cs" />
     <Compile Include="BoilDigits.cs" />
+    <Compile Include="BoilMathFunctions.cs" />
+    <Compile Include="BoilSequences.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
