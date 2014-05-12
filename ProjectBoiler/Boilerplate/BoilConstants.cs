@@ -8,8 +8,8 @@ namespace Boilerplate
 {
     public class BoilConstants
     {
-        public static const double phi = 1.61803398875;
-        public static const double pi = 3.14159265359;
-        public static const double e = 2.71828182846;
+        public const double phi = 1.61803398875;
+        public const double pi = 3.14159265359;
+        public const double e = 2.71828182846;
     }
 }
