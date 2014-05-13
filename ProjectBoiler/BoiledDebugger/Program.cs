@@ -12,22 +12,22 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            long n = 600851475143;
+            long n = 33333332;
 
-            var factors = BoilSequences.PrimeFactorizationWheelFactorization(n);
+            //var factors = BoilSequences.PrimeFactorizationWheelFactorization(n);
 
-            for (int i = 0; i < factors.Count; i++)
-            {
-                Console.Write("{0} ", factors[i]);
-            }
-
-            //Console.WriteLine("HB: {0}ms", Benchmark(() =>
+            //for (int i = 0; i < factors.Count; i++)
             //{
-            //    Parallel.For(n1, n2, i =>
-            //    {
-            //        BoilMathFunctions.IsPrimeHybrid(i);
-            //    });
-            //}, 1, false));
+            //    Console.Write("{0} ", factors[i]);
+            //}
+
+            Console.WriteLine("HB: {0}ms", Benchmark(() =>
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    BoilMathFunctions.IsPrimeHybrid(i);
+                }
+            }, 1, false));
             
             Console.ReadLine();
         }
@@ -37,10 +37,12 @@ namespace BoiledDebugger
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
+
             if (warmup)
             {
                 action();
             }
+
             var startTime = DateTime.UtcNow;
             for (int i = 0; i < iterations; i++)
             {
