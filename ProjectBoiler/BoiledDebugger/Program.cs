@@ -12,21 +12,22 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            var n = 1000000L;
-            Console.WriteLine("WF: {0}ms", Benchmark(() =>
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    BoilMathFunctions.IsPrimeWheelFact(i);
-                }
-            }, 100));
+            long n = 4000000000L;
             Console.WriteLine("HB: {0}ms", Benchmark(() =>
             {
-                for (int i = 0; i < n; i++)
+                Parallel.For(3000000000L, n, i =>
                 {
                     BoilMathFunctions.IsPrimeHybrid(i);
-                }
-            }, 100));
+                });
+            }, 1));
+            //Console.WriteLine("WF: {0}ms", Benchmark(() =>
+            //{
+            //    Parallel.For(30000000, n, i =>
+            //    {
+            //        BoilMathFunctions.IsPrimeWheelFact(i);
+            //    });
+            //}, 1));
+            
             Console.ReadLine();
         }
 
@@ -45,7 +46,7 @@ namespace BoiledDebugger
 
             var totalTime = endTime - startTime;
 
-            return Math.Round(totalTime.TotalMilliseconds);
+            return Math.Round(totalTime.TotalMilliseconds / iterations);
         }
     }
 }

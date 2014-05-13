@@ -9,6 +9,29 @@ namespace Boilerplate
 {
     public class BoilMathFunctions
     {
+        public static long ModPow(long b, long e, long n)
+        {
+            //if (b != 0 && Int64.MaxValue / (b % n) < n - 1)
+            //{
+            //    throw new OverflowException("Cannot handle ModPow for base " + b + " and modulus " + n + ".");
+            //}
+
+            var result = 1L;
+            b = b % n;
+
+            while (e > 0)
+            {
+                if ((e & 1) == 1)
+                {
+                    result = (result * b) % n;
+                }
+                e >>= 1;
+                b = (b * b) % n;
+            }
+
+            return result;
+        }
+
         public static long GcdMod(long a, long b)
         {
             long t;
@@ -143,7 +166,7 @@ namespace Boilerplate
             return true;
         }
 
-        public static bool IsPrimeMillerRabin(long n)
+        public static bool IsPrimeMillerRabinBigInteger(long n)
         {
             if (n < 2)
             {
@@ -207,9 +230,70 @@ namespace Boilerplate
             return true;
         }
 
+        public static bool IsPrimeMillerRabinLong(long n)
+        {
+            if (n < 2)
+            {
+                return false;
+            }
+            else if (n < 4)
+            {
+                return true;
+            }
+            else if ((n & 1L) == 0)
+            {
+                return false;
+            }
+
+            long[] witnesses;
+
+            if (n < 1373653L)
+            {
+                witnesses = new long[] { 2, 3 };
+            }
+            else if (n < 4759123141L)
+            {
+                witnesses = new long[] { 2, 7, 61 };
+            }
+            else if (n < 47636622961201L)
+            {
+                witnesses = new long[] { 2, 2570940, 211991001, 3749873356 };
+            }
+            else
+            {
+                witnesses = new long[] { 2, 2570940, 880937, 610386380, 4130785767 };
+            }
+
+            var s = n - 1;
+            while ((s & 1L) == 0)
+            {
+                s >>= 1;
+            }
+
+            for (int i = 0; i < witnesses.Length; i++)
+            {
+                var a = witnesses[i];
+                var d = s;
+
+                var mod = ModPow(a, d, n);
+                while (d != n - 1 && mod != 1 && mod != (n - 1))
+                {
+                    mod = ModPow(mod, 2, n);
+                    d <<= 1;
+                }
+
+                if (mod != (n - 1) && (d & 1L) == 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool IsPrimeHybrid(long n)
         {
-            if (n < 510511L)
+            if (n < 2209L)
             {
                 return IsPrimeWheelFact(n);
             }
@@ -217,16 +301,16 @@ namespace Boilerplate
             {
                 return false;
             }
-            else if (BoilMathFunctions.GcdMod(n, 510510L) > 1) //pre-computed multiplciation of first few primes (3 * 5 * ... * 19)
+            else if (GcdMod(307444891294245705L, n) > 1) //pre-computed multiplciation of first few primes (3 * 5 * ... * 47)
             {
                 return false;
             }
-            //else if (n > 9699690 && BoilMathFunctions.GcdMod(3359814435017L, n) > 1) //pre-computed multiplciation of first few primes (23 * 5 * ... * 53)
-            //{
-            //    return false;
-            //}
+            else if (n < 3000000000L)
+            {
+                return IsPrimeMillerRabinLong(n);
+            }
 
-            return IsPrimeMillerRabin(n);
+            return IsPrimeMillerRabinBigInteger(n);
         }
     }
 }
