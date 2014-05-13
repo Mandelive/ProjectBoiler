@@ -226,5 +226,65 @@ namespace Boilerplate
             }
             return primes;
         }
+
+        public static List<long> PrimeFactorizationWheelFactorization(long n)
+        {
+            var factors = new List<long>();
+            if (n < 2)
+            {
+                return factors;
+            }
+
+            var t = n;
+
+            var smallPrimes = new long[] { 2, 3, 5, 7, 11 };
+            for (int i = 0; i < smallPrimes.Length; i++)
+            {
+                if (t % smallPrimes[i] == 0)
+                {
+                    factors.Add(smallPrimes[i]);
+                    do 
+                    {
+                        t /= smallPrimes[i];
+                    } while (t % smallPrimes[i] == 0);
+                }
+            }
+
+            if (t == 1)
+            {
+                return factors;
+            }
+
+            var pattern = new long[] { 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 4, 14, 4, 6, 2, 10, 2, 6, 6, 4, 2, 4, 6, 2, 10, 2, 4, 2, 12, 10, 2, 4, 2, 4, 6, 2, 6, 4, 6, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 6, 8, 6, 10, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 6, 10, 2, 10, 2, 4, 2, 4, 6, 8, 4, 2, 4, 12, 2, 6, 4, 2, 6, 4, 6, 12, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 10, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 6, 6, 2, 6, 6, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 6, 4, 8, 6, 4, 6, 2, 4, 6, 8, 6, 4, 2, 10, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 8, 6, 4, 2, 4, 6, 6, 2, 6, 4, 8, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 6, 6, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 6, 4, 6, 2, 6, 4, 2, 4, 6, 6, 8, 4, 2, 6, 10, 8, 4, 2, 4, 2, 4, 8, 10, 6, 2, 4, 8, 6, 6, 4, 2, 4, 6, 2, 6, 4, 6, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 6, 6, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 8, 4, 6, 2, 6, 6, 4, 2, 4, 6, 8, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 10, 2, 4, 6, 8, 6, 4, 2, 6, 4, 6, 8, 4, 6, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 6, 6, 2, 6, 6, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 10, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 12, 6, 4, 6, 2, 4, 6, 2, 12, 4, 2, 4, 8, 6, 4, 2, 4, 2, 10, 2, 10, 6, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 10, 6, 8, 6, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 6, 4, 6, 2, 6, 4, 2, 4, 2, 10, 12, 2, 4, 2, 10, 2, 6, 4, 2, 4, 6, 6, 2, 10, 2, 6, 4, 14, 4, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 12, 2, 12 };
+            var baseSemiPrime = 13L;
+            var patternIndex = -1;
+
+            while (!BoilMathFunctions.IsPrimeHybrid(t))
+            {
+                if (t % baseSemiPrime == 0)
+                {
+                    if (BoilMathFunctions.IsPrimeHybrid(baseSemiPrime))
+                    {
+                        factors.Add(baseSemiPrime);
+                    }
+                    do
+                    {
+                        t /= baseSemiPrime;
+                    } while (t % baseSemiPrime == 0);
+                }
+
+                patternIndex++;
+                if (patternIndex == pattern.Length)
+                {
+                    patternIndex = 0;
+                }
+
+                baseSemiPrime += pattern[patternIndex];
+            }
+
+            factors.Add(t);
+
+            return factors;
+        }
     }
 }

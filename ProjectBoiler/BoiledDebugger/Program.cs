@@ -12,31 +12,35 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            long n = 4000000000L;
-            Console.WriteLine("HB: {0}ms", Benchmark(() =>
+            long n = 600851475143;
+
+            var factors = BoilSequences.PrimeFactorizationWheelFactorization(n);
+
+            for (int i = 0; i < factors.Count; i++)
             {
-                Parallel.For(3000000000L, n, i =>
-                {
-                    BoilMathFunctions.IsPrimeHybrid(i);
-                });
-            }, 1));
-            //Console.WriteLine("WF: {0}ms", Benchmark(() =>
+                Console.Write("{0} ", factors[i]);
+            }
+
+            //Console.WriteLine("HB: {0}ms", Benchmark(() =>
             //{
-            //    Parallel.For(30000000, n, i =>
+            //    Parallel.For(n1, n2, i =>
             //    {
-            //        BoilMathFunctions.IsPrimeWheelFact(i);
+            //        BoilMathFunctions.IsPrimeHybrid(i);
             //    });
-            //}, 1));
+            //}, 1, false));
             
             Console.ReadLine();
         }
 
-        static double Benchmark(Action action, int iterations = 1)
+        static double Benchmark(Action action, int iterations = 1, bool warmup = false)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-
+            if (warmup)
+            {
+                action();
+            }
             var startTime = DateTime.UtcNow;
             for (int i = 0; i < iterations; i++)
             {

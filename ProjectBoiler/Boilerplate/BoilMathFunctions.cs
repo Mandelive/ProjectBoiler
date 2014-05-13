@@ -86,36 +86,7 @@ namespace Boilerplate
             return a << shift;
         }
 
-        public static bool IsPrimeTrialDivision(long n)
-        {
-            if (n < 2)
-            {
-                return false;
-            }
-            else if (n < 4)
-            {
-                return true;
-            }
-            else if ((n & 1L) == 0)
-            {
-                return false;
-            }
-
-            var nsqrt = (long)(Math.Sqrt(n));
-            var primes = BoilSequences.PrimesSequenceUpTo(nsqrt);
-
-            foreach (var p in primes)
-            {
-                if (n % p == 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public static bool IsPrimeWheelFact(long n)
+        public static bool IsPrimeWheelFactorization(long n)
         {
             if (n < 2)
             {
@@ -166,6 +137,67 @@ namespace Boilerplate
             return true;
         }
 
+        public static bool IsPrimeMillerRabinLong(long n)
+        {
+            if (n < 2)
+            {
+                return false;
+            }
+            else if (n < 4)
+            {
+                return true;
+            }
+            else if ((n & 1L) == 0)
+            {
+                return false;
+            }
+
+            long[] witnesses;
+
+            if (n < 9080191L)
+            {
+                witnesses = new long[] { 31, 73 };
+            }
+            else if (n < 4759123141L)
+            {
+                witnesses = new long[] { 2, 7, 61 };
+            }
+            else if (n < 47636622961201L)
+            {
+                witnesses = new long[] { 2, 2570940, 211991001, 3749873356 };
+            }
+            else
+            {
+                witnesses = new long[] { 2, 2570940, 880937, 610386380, 4130785767 };
+            }
+
+            var s = n - 1;
+            while ((s & 1L) == 0)
+            {
+                s >>= 1;
+            }
+
+            for (int i = 0; i < witnesses.Length; i++)
+            {
+                var a = witnesses[i];
+                var d = s;
+
+                var mod = ModPow(a, d, n);
+                while (d != n - 1 && mod != 1 && mod != (n - 1))
+                {
+                    mod = ModPow(mod, 2, n);
+                    d <<= 1;
+                }
+
+                if (mod != (n - 1) && (d & 1L) == 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool IsPrimeMillerRabinBigInteger(long n)
         {
             if (n < 2)
@@ -183,9 +215,9 @@ namespace Boilerplate
 
             BigInteger[] witnesses;
 
-            if (n < 1373653L)
+            if (n < 9080191L)
             {
-                witnesses = new BigInteger[] { 2, 3 };
+                witnesses = new BigInteger[] { 31, 73 };
             }
             else if (n < 4759123141L)
             {
@@ -230,72 +262,11 @@ namespace Boilerplate
             return true;
         }
 
-        public static bool IsPrimeMillerRabinLong(long n)
-        {
-            if (n < 2)
-            {
-                return false;
-            }
-            else if (n < 4)
-            {
-                return true;
-            }
-            else if ((n & 1L) == 0)
-            {
-                return false;
-            }
-
-            long[] witnesses;
-
-            if (n < 1373653L)
-            {
-                witnesses = new long[] { 2, 3 };
-            }
-            else if (n < 4759123141L)
-            {
-                witnesses = new long[] { 2, 7, 61 };
-            }
-            else if (n < 47636622961201L)
-            {
-                witnesses = new long[] { 2, 2570940, 211991001, 3749873356 };
-            }
-            else
-            {
-                witnesses = new long[] { 2, 2570940, 880937, 610386380, 4130785767 };
-            }
-
-            var s = n - 1;
-            while ((s & 1L) == 0)
-            {
-                s >>= 1;
-            }
-
-            for (int i = 0; i < witnesses.Length; i++)
-            {
-                var a = witnesses[i];
-                var d = s;
-
-                var mod = ModPow(a, d, n);
-                while (d != n - 1 && mod != 1 && mod != (n - 1))
-                {
-                    mod = ModPow(mod, 2, n);
-                    d <<= 1;
-                }
-
-                if (mod != (n - 1) && (d & 1L) == 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         public static bool IsPrimeHybrid(long n)
         {
-            if (n < 2209L)
+            if (n < 500)
             {
-                return IsPrimeWheelFact(n);
+                return IsPrimeWheelFactorization(n);
             }
             else if ((n & 1L) == 0)
             {
