@@ -9,19 +9,26 @@ namespace BoiledProblems
 {
     public class Problem5 : BaseProblem
     {
-        public Problem5(): base(
-            5,
-            @"U21hbGxlc3QgbXVsdGlwbGU=",
-            @"MjUyMCBpcyB0aGUgc21hbGxlc3QgbnVtYmVyIHRoYXQgY2FuIGJlIGRpdmlkZWQgYnkgZWFjaCBvZiB0aGUgbnVtYmVycyBmcm9tIDEgdG8gMTAgd2l0aG91dCBhbnkgcmVtYWluZGVyLg0KDQpXaGF0IGlzIHRoZSBzbWFsbGVzdCBwb3NpdGl2ZSBudW1iZXIgdGhhdCBpcyBldmVubHkgZGl2aXNpYmxlIGJ5IGFsbCBvZiB0aGUgbnVtYmVycyBmcm9tIDEgdG8gMjA/DQo=",
-            new string[] {
-                "n:num - divisible from 1 to n"
-            },
-            new string[] {
-                "20"
-            }
-        ) {}
+        public Problem5()
+        {
+            Id = 5;
+            Title = @"U21hbGxlc3QgbXVsdGlwbGU=";
+            Description = @"MjUyMCBpcyB0aGUgc21hbGxlc3QgbnVtYmVyIHRoYXQgY2FuIGJlIGRpdmlkZWQgYnkgZWFjaCBvZiB0aGUgbnVtYmVycyBmcm9tIDEgdG8gMTAgd2l0aG91dCBhbnkgcmVtYWluZGVyLg0KDQpXaGF0IGlzIHRoZSBzbWFsbGVzdCBwb3NpdGl2ZSBudW1iZXIgdGhhdCBpcyBldmVubHkgZGl2aXNpYmxlIGJ5IGFsbCBvZiB0aGUgbnVtYmVycyBmcm9tIDEgdG8gMjA/DQo=";
 
-        public override string Solve(string[] parameters)
+            parametersInfo = new string[]
+            {
+                "n:num - divisible from 1 to n"
+            };
+
+            defaultParameters = new string[]
+            {
+                "20"
+            };
+
+            ResetParameters();
+        }
+
+        public override string Solve()
         {
             var n = Int64.Parse(parameters[0]);
             return smallestDivisibleFrom1ToN(n).ToString();

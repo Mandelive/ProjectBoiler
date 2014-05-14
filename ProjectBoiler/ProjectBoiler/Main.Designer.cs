@@ -33,19 +33,19 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvProblems = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblParam5 = new System.Windows.Forms.Label();
+            this.txtParam5 = new System.Windows.Forms.TextBox();
+            this.lblParam4 = new System.Windows.Forms.Label();
+            this.txtParam4 = new System.Windows.Forms.TextBox();
+            this.lblParam3 = new System.Windows.Forms.Label();
+            this.txtParam3 = new System.Windows.Forms.TextBox();
+            this.lblParam2 = new System.Windows.Forms.Label();
+            this.txtParam2 = new System.Windows.Forms.TextBox();
+            this.lblParam1 = new System.Windows.Forms.Label();
+            this.txtParam1 = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSolve = new System.Windows.Forms.Button();
             this.consoleBrowser = new System.Windows.Forms.WebBrowser();
-            this.txtParam1 = new System.Windows.Forms.TextBox();
-            this.lblParam1 = new System.Windows.Forms.Label();
-            this.lblParam2 = new System.Windows.Forms.Label();
-            this.txtParam2 = new System.Windows.Forms.TextBox();
-            this.lblParam3 = new System.Windows.Forms.Label();
-            this.txtParam3 = new System.Windows.Forms.TextBox();
-            this.lblParam4 = new System.Windows.Forms.Label();
-            this.txtParam4 = new System.Windows.Forms.TextBox();
-            this.lblParam5 = new System.Windows.Forms.Label();
-            this.txtParam5 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -98,6 +98,8 @@
             // 
             this.tvProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvProblems.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tvProblems.HideSelection = false;
+            this.tvProblems.HotTracking = true;
             this.tvProblems.Location = new System.Drawing.Point(0, 0);
             this.tvProblems.Name = "tvProblems";
             treeNode1.Name = "BoiledProblems";
@@ -128,6 +130,91 @@
             this.panel1.Size = new System.Drawing.Size(240, 274);
             this.panel1.TabIndex = 0;
             // 
+            // lblParam5
+            // 
+            this.lblParam5.AutoSize = true;
+            this.lblParam5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblParam5.Location = new System.Drawing.Point(16, 180);
+            this.lblParam5.Name = "lblParam5";
+            this.lblParam5.Size = new System.Drawing.Size(49, 15);
+            this.lblParam5.TabIndex = 11;
+            this.lblParam5.Text = "Param5";
+            // 
+            // txtParam5
+            // 
+            this.txtParam5.Location = new System.Drawing.Point(16, 199);
+            this.txtParam5.Name = "txtParam5";
+            this.txtParam5.Size = new System.Drawing.Size(208, 20);
+            this.txtParam5.TabIndex = 10;
+            // 
+            // lblParam4
+            // 
+            this.lblParam4.AutoSize = true;
+            this.lblParam4.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblParam4.Location = new System.Drawing.Point(16, 138);
+            this.lblParam4.Name = "lblParam4";
+            this.lblParam4.Size = new System.Drawing.Size(49, 15);
+            this.lblParam4.TabIndex = 9;
+            this.lblParam4.Text = "Param4";
+            // 
+            // txtParam4
+            // 
+            this.txtParam4.Location = new System.Drawing.Point(16, 157);
+            this.txtParam4.Name = "txtParam4";
+            this.txtParam4.Size = new System.Drawing.Size(208, 20);
+            this.txtParam4.TabIndex = 8;
+            // 
+            // lblParam3
+            // 
+            this.lblParam3.AutoSize = true;
+            this.lblParam3.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblParam3.Location = new System.Drawing.Point(16, 96);
+            this.lblParam3.Name = "lblParam3";
+            this.lblParam3.Size = new System.Drawing.Size(49, 15);
+            this.lblParam3.TabIndex = 7;
+            this.lblParam3.Text = "Param3";
+            // 
+            // txtParam3
+            // 
+            this.txtParam3.Location = new System.Drawing.Point(16, 115);
+            this.txtParam3.Name = "txtParam3";
+            this.txtParam3.Size = new System.Drawing.Size(208, 20);
+            this.txtParam3.TabIndex = 6;
+            // 
+            // lblParam2
+            // 
+            this.lblParam2.AutoSize = true;
+            this.lblParam2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblParam2.Location = new System.Drawing.Point(16, 54);
+            this.lblParam2.Name = "lblParam2";
+            this.lblParam2.Size = new System.Drawing.Size(49, 15);
+            this.lblParam2.TabIndex = 5;
+            this.lblParam2.Text = "Param2";
+            // 
+            // txtParam2
+            // 
+            this.txtParam2.Location = new System.Drawing.Point(16, 73);
+            this.txtParam2.Name = "txtParam2";
+            this.txtParam2.Size = new System.Drawing.Size(208, 20);
+            this.txtParam2.TabIndex = 4;
+            // 
+            // lblParam1
+            // 
+            this.lblParam1.AutoSize = true;
+            this.lblParam1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblParam1.Location = new System.Drawing.Point(16, 12);
+            this.lblParam1.Name = "lblParam1";
+            this.lblParam1.Size = new System.Drawing.Size(49, 15);
+            this.lblParam1.TabIndex = 3;
+            this.lblParam1.Text = "Param1";
+            // 
+            // txtParam1
+            // 
+            this.txtParam1.Location = new System.Drawing.Point(16, 31);
+            this.txtParam1.Name = "txtParam1";
+            this.txtParam1.Size = new System.Drawing.Size(208, 20);
+            this.txtParam1.TabIndex = 2;
+            // 
             // btnClear
             // 
             this.btnClear.Location = new System.Drawing.Point(134, 232);
@@ -157,91 +244,6 @@
             this.consoleBrowser.Size = new System.Drawing.Size(764, 538);
             this.consoleBrowser.TabIndex = 1;
             this.consoleBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.consoleBrowser_DocumentCompleted);
-            // 
-            // txtParam1
-            // 
-            this.txtParam1.Location = new System.Drawing.Point(16, 31);
-            this.txtParam1.Name = "txtParam1";
-            this.txtParam1.Size = new System.Drawing.Size(208, 20);
-            this.txtParam1.TabIndex = 2;
-            // 
-            // lblParam1
-            // 
-            this.lblParam1.AutoSize = true;
-            this.lblParam1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblParam1.Location = new System.Drawing.Point(16, 12);
-            this.lblParam1.Name = "lblParam1";
-            this.lblParam1.Size = new System.Drawing.Size(49, 15);
-            this.lblParam1.TabIndex = 3;
-            this.lblParam1.Text = "Param1";
-            // 
-            // lblParam2
-            // 
-            this.lblParam2.AutoSize = true;
-            this.lblParam2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblParam2.Location = new System.Drawing.Point(16, 54);
-            this.lblParam2.Name = "lblParam2";
-            this.lblParam2.Size = new System.Drawing.Size(49, 15);
-            this.lblParam2.TabIndex = 5;
-            this.lblParam2.Text = "Param2";
-            // 
-            // txtParam2
-            // 
-            this.txtParam2.Location = new System.Drawing.Point(16, 73);
-            this.txtParam2.Name = "txtParam2";
-            this.txtParam2.Size = new System.Drawing.Size(208, 20);
-            this.txtParam2.TabIndex = 4;
-            // 
-            // lblParam3
-            // 
-            this.lblParam3.AutoSize = true;
-            this.lblParam3.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblParam3.Location = new System.Drawing.Point(16, 96);
-            this.lblParam3.Name = "lblParam3";
-            this.lblParam3.Size = new System.Drawing.Size(49, 15);
-            this.lblParam3.TabIndex = 7;
-            this.lblParam3.Text = "Param3";
-            // 
-            // txtParam3
-            // 
-            this.txtParam3.Location = new System.Drawing.Point(16, 115);
-            this.txtParam3.Name = "txtParam3";
-            this.txtParam3.Size = new System.Drawing.Size(208, 20);
-            this.txtParam3.TabIndex = 6;
-            // 
-            // lblParam4
-            // 
-            this.lblParam4.AutoSize = true;
-            this.lblParam4.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblParam4.Location = new System.Drawing.Point(16, 138);
-            this.lblParam4.Name = "lblParam4";
-            this.lblParam4.Size = new System.Drawing.Size(49, 15);
-            this.lblParam4.TabIndex = 9;
-            this.lblParam4.Text = "Param4";
-            // 
-            // txtParam4
-            // 
-            this.txtParam4.Location = new System.Drawing.Point(16, 157);
-            this.txtParam4.Name = "txtParam4";
-            this.txtParam4.Size = new System.Drawing.Size(208, 20);
-            this.txtParam4.TabIndex = 8;
-            // 
-            // lblParam5
-            // 
-            this.lblParam5.AutoSize = true;
-            this.lblParam5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblParam5.Location = new System.Drawing.Point(16, 180);
-            this.lblParam5.Name = "lblParam5";
-            this.lblParam5.Size = new System.Drawing.Size(49, 15);
-            this.lblParam5.TabIndex = 11;
-            this.lblParam5.Text = "Param5";
-            // 
-            // txtParam5
-            // 
-            this.txtParam5.Location = new System.Drawing.Point(16, 199);
-            this.txtParam5.Name = "txtParam5";
-            this.txtParam5.Size = new System.Drawing.Size(208, 20);
-            this.txtParam5.TabIndex = 10;
             // 
             // Main
             // 

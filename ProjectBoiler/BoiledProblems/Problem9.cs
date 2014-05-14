@@ -9,19 +9,26 @@ namespace BoiledProblems
 {
     public class Problem9 : BaseProblem
     {
-        public Problem9(): base(
-            9,
-            @"U3BlY2lhbCBQeXRoYWdvcmVhbiB0cmlwbGV0",
-            @"QSBQeXRoYWdvcmVhbiB0cmlwbGV0IGlzIGEgc2V0IG9mIHRocmVlIG5hdHVyYWwgbnVtYmVycywgYSA8IGIgPCBjLCBmb3Igd2hpY2gsDQphXjIgKyBiXjIgPSBjXjINCg0KRm9yIGV4YW1wbGUsIDNeMiArIDReMiA9IDkgKyAxNiA9IDI1ID0gNV4yLg0KDQpUaGVyZSBleGlzdHMgZXhhY3RseSBvbmUgUHl0aGFnb3JlYW4gdHJpcGxldCBmb3Igd2hpY2ggYSArIGIgKyBjID0gMTAwMC4NCkZpbmQgdGhlIHByb2R1Y3QgYWJjLg0K",
-            new string[] {
-                "s:num - sum of pythagorean triplet"
-            },
-            new string[] {
-                "1000"
-            }
-        ) {}
+        public Problem9()
+        {
+            Id = 9;
+            Title = @"U3BlY2lhbCBQeXRoYWdvcmVhbiB0cmlwbGV0";
+            Description = @"QSBQeXRoYWdvcmVhbiB0cmlwbGV0IGlzIGEgc2V0IG9mIHRocmVlIG5hdHVyYWwgbnVtYmVycywgYSA8IGIgPCBjLCBmb3Igd2hpY2gsDQphXjIgKyBiXjIgPSBjXjINCg0KRm9yIGV4YW1wbGUsIDNeMiArIDReMiA9IDkgKyAxNiA9IDI1ID0gNV4yLg0KDQpUaGVyZSBleGlzdHMgZXhhY3RseSBvbmUgUHl0aGFnb3JlYW4gdHJpcGxldCBmb3Igd2hpY2ggYSArIGIgKyBjID0gMTAwMC4NCkZpbmQgdGhlIHByb2R1Y3QgYWJjLg0K";
 
-        public override string Solve(string[] parameters)
+            parametersInfo = new string[]
+            {
+                "s:num - sum of pythagorean triplet"
+            };
+
+            defaultParameters = new string[]
+            {
+                "1000"
+            };
+
+            ResetParameters();
+        }
+
+        public override string Solve()
         {
             var s = Int64.Parse(parameters[0]);
             return findProductOfPythagoreanTriplet(s).ToString();

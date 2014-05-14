@@ -9,19 +9,26 @@ namespace BoiledProblems
 {
     public class Problem4 : BaseProblem
     {
-        public Problem4(): base(
-            4,
-            @"TGFyZ2VzdCBwYWxpbmRyb21lIHByb2R1Y3Q=",
-            @"QSBwYWxpbmRyb21pYyBudW1iZXIgcmVhZHMgdGhlIHNhbWUgYm90aCB3YXlzLiBUaGUgbGFyZ2VzdCBwYWxpbmRyb21lIG1hZGUgZnJvbSB0aGUgcHJvZHVjdCBvZiB0d28gMi1kaWdpdCBudW1iZXJzIGlzIDkwMDkgPSA5MSDDlyA5OS4NCg0KRmluZCB0aGUgbGFyZ2VzdCBwYWxpbmRyb21lIG1hZGUgZnJvbSB0aGUgcHJvZHVjdCBvZiB0d28gMy1kaWdpdCBudW1iZXJzLg0K",
-            new string[] {
-                "n:num - n-digit number"
-            },
-            new string[] {
-                "3"
-            }
-        ) {}
+        public Problem4()
+        {
+            Id = 4;
+            Title = @"TGFyZ2VzdCBwYWxpbmRyb21lIHByb2R1Y3Q=";
+            Description = @"QSBwYWxpbmRyb21pYyBudW1iZXIgcmVhZHMgdGhlIHNhbWUgYm90aCB3YXlzLiBUaGUgbGFyZ2VzdCBwYWxpbmRyb21lIG1hZGUgZnJvbSB0aGUgcHJvZHVjdCBvZiB0d28gMi1kaWdpdCBudW1iZXJzIGlzIDkwMDkgPSA5MSDDlyA5OS4NCg0KRmluZCB0aGUgbGFyZ2VzdCBwYWxpbmRyb21lIG1hZGUgZnJvbSB0aGUgcHJvZHVjdCBvZiB0d28gMy1kaWdpdCBudW1iZXJzLg0K";
 
-        public override string Solve(string[] parameters)
+            parametersInfo = new string[]
+            {
+                "n:num - n-digit number"
+            };
+
+            defaultParameters = new string[]
+            {
+                "3"
+            };
+
+            ResetParameters();
+        }
+
+        public override string Solve()
         {
             int n = Int32.Parse(parameters[0]);
             return findLargestPalindromTwoNDigits(n).ToString();

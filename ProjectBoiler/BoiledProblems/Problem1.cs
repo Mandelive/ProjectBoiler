@@ -8,19 +8,26 @@ namespace BoiledProblems
 {
     public class Problem1 : BaseProblem
     {
-        public Problem1(): base(
-            1, 
-            @"TXVsdGlwbGVzIG9mIDMgYW5kIDU=", 
-            @"SWYgd2UgbGlzdCBhbGwgdGhlIG5hdHVyYWwgbnVtYmVycyBiZWxvdyAxMCB0aGF0IGFyZSBtdWx0aXBsZXMgb2YgMyBvciA1LCB3ZSBnZXQgMywgNSwgNiBhbmQgOS4gVGhlIHN1bSBvZiB0aGVzZSBtdWx0aXBsZXMgaXMgMjMuDQoNCkZpbmQgdGhlIHN1bSBvZiBhbGwgdGhlIG11bHRpcGxlcyBvZiAzIG9yIDUgYmVsb3cgMTAwMC4=",
-            new string[] {
-                "n:num - upperlimit number"
-            },
-            new string[] {
-                "1000"
-            }
-        ) {}
+        public Problem1()
+        {
+            Id = 1;
+            Title = @"TXVsdGlwbGVzIG9mIDMgYW5kIDU=";
+            Description = @"SWYgd2UgbGlzdCBhbGwgdGhlIG5hdHVyYWwgbnVtYmVycyBiZWxvdyAxMCB0aGF0IGFyZSBtdWx0aXBsZXMgb2YgMyBvciA1LCB3ZSBnZXQgMywgNSwgNiBhbmQgOS4gVGhlIHN1bSBvZiB0aGVzZSBtdWx0aXBsZXMgaXMgMjMuDQoNCkZpbmQgdGhlIHN1bSBvZiBhbGwgdGhlIG11bHRpcGxlcyBvZiAzIG9yIDUgYmVsb3cgMTAwMC4=";
 
-        public override string Solve(string[] parameters)
+            parametersInfo = new string[]
+            {
+                "n:num - upperlimit number"
+            };
+
+            defaultParameters = new string[]
+            {
+                "1000"
+            };
+
+            ResetParameters();
+        }
+
+        public override string Solve()
         {
             long n = Int64.Parse(parameters[0]);
             return findSumOfThreeFiveMultiples(n).ToString();

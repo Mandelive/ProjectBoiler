@@ -86,6 +86,24 @@ namespace Boilerplate
             return a << shift;
         }
 
+        public static long LcmGcd(long a, long b)
+        {
+            var gcd = GcdMod(a, b);
+            if (a > b)
+            {
+                return (a / gcd) * b;
+            }
+            else
+            {
+                return (b / gcd) * a;
+            }
+        }
+
+        public static long LcmPrimeFactorization(List<long> nums)
+        {
+            return 0;
+        }
+
         public static bool IsPrimeWheelFactorization(long n)
         {
             if (n < 2)

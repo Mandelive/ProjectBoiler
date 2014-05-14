@@ -63,9 +63,9 @@ namespace ProjectBoiler
 
             currentProblem = (IProblem)Activator.CreateInstance(problemType);
 
-            WriteToConsole("span", "Problem " + currentProblem.GetID().ToString() + ": ", true);
-            WriteToConsole("span", currentProblem.GetTitle(), "font-weight: bold;");
-            WriteToConsole("div", currentProblem.GetDescription());
+            WriteToConsole("span", "Problem " + currentProblem.Id.ToString() + ": ", true);
+            WriteToConsole("span", currentProblem.Title, "font-weight: bold;");
+            WriteToConsole("div", currentProblem.Description);
             WriteToConsole("br");
 
             var paramsInfo = currentProblem.GetParametersInfo();
@@ -126,7 +126,7 @@ namespace ProjectBoiler
 
         private void btnSolve_Click(object sender, EventArgs e)
         {
-            tvProblems.Focus();
+            txtParam1.Focus();
             BenchmarkProblemSolving();
         }
 
@@ -136,14 +136,29 @@ namespace ProjectBoiler
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            var parameters = new string[] { txtParam1.Text, txtParam2.Text, txtParam3.Text, txtParam4.Text, txtParam5.Text };
-            var paramsInfo = currentProblem.GetParametersInfo();
+            var parameters = new string[currentProblem.ParametersCount];
+            Control paramsTextBoxContainer = txtParam1.Parent;
+            for (int i = 0; i < currentProblem.ParametersCount; i++)
+            {
+                for (int j = 0; j < paramsTextBoxContainer.Controls.Count; j++)
+                {
+                    var c = paramsTextBoxContainer.Controls[j];
+                    if (c is TextBox && c.Name.EndsWith("Param" + (i + 1)))
+                    {
+                        parameters[i] = c.Text;
+                        break;
+                    }
+                }
+            }
+            currentProblem.SetParameters(parameters);
+
+            var parametersInfo = currentProblem.GetParametersInfo();
             var parametersLine = "";
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < currentProblem.ParametersCount; i++)
             {
                 if (!String.IsNullOrEmpty(parameters[i]))
                 {
-                    parametersLine += paramsInfo[i].Substring(0, paramsInfo[i].IndexOf(':')) + ": " + parameters[i] + ", ";
+                    parametersLine += parametersInfo[i].Substring(0, parametersInfo[i].IndexOf(':')) + ": " + parameters[i] + ", ";
                 }
             }
             parametersLine = parametersLine.Substring(0, parametersLine.Length - 2);
@@ -153,7 +168,7 @@ namespace ProjectBoiler
             WriteToConsole("br");
 
             var startTime = DateTime.UtcNow;
-            var t = new Task<string>(() => currentProblem.Solve(parameters));
+            var t = new Task<string>(() => currentProblem.Solve());
             t.Start();
             var result = await t;
             var endTime = DateTime.UtcNow;
@@ -191,7 +206,6 @@ namespace ProjectBoiler
             }
             else
             {
-                //consoleBrowser.Document.Body.InnerText = "";
                 ClearCurrentProblem();
                 ClearParameters();
                 btnSolve.Enabled = false;
@@ -210,7 +224,7 @@ namespace ProjectBoiler
 
         private void splitContainer2_SizeChanged(object sender, EventArgs e)
         {
-            splitContainer2.SplitterDistance = splitContainer2.Height - 278;
+            //splitContainer2.SplitterDistance = splitContainer2.Height - 278;
         }
 
         private void WriteToConsole(string elementType, string text, bool emphasis)

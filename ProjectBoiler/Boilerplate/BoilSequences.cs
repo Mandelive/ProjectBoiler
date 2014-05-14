@@ -241,22 +241,20 @@ namespace Boilerplate
                 return factors;
             }
 
-            var t = n;
-
             var smallPrimes = new long[] { 2, 3, 5, 7, 11 };
             for (int i = 0; i < smallPrimes.Length; i++)
             {
-                if (t % smallPrimes[i] == 0)
+                if (n % smallPrimes[i] == 0)
                 {
                     factors.Add(smallPrimes[i]);
                     do 
                     {
-                        t /= smallPrimes[i];
-                    } while (t % smallPrimes[i] == 0);
+                        n /= smallPrimes[i];
+                    } while (n % smallPrimes[i] == 0);
                 }
             }
 
-            if (t == 1)
+            if (n == 1)
             {
                 return factors;
             }
@@ -265,16 +263,20 @@ namespace Boilerplate
             var basePrime = 13L;
             var patternIndex = -1;
 
-            //TODO: check for t == 1?
-            while (!BoilMathFunctions.IsPrimeHybrid(t))
+            while (n > 3000)
             {
-                if (t % basePrime == 0)
+                if (BoilMathFunctions.IsPrimeHybrid(n))
+                {
+                    factors.Add(n);
+                    break;
+                }
+                else if (n % basePrime == 0)
                 {
                     factors.Add(basePrime);
                     do
                     {
-                        t /= basePrime;
-                    } while (t % basePrime == 0);
+                        n /= basePrime;
+                    } while (n % basePrime == 0);
                 }
 
                 patternIndex++;
@@ -286,53 +288,15 @@ namespace Boilerplate
                 basePrime += pattern[patternIndex];
             }
 
-            factors.Add(t);
-
-            return factors;
-        }
-
-        public static List<long> PrimeFactorizationWFRepeat(long n)
-        {
-            var factors = new List<long>();
-            if (n < 2)
+            while (n > 1)
             {
-                return factors;
-            }
-
-            var t = n;
-
-            var smallPrimes = new long[] { 2, 3, 5, 7, 11 };
-            for (int i = 0; i < smallPrimes.Length; i++)
-            {
-                if (t % smallPrimes[i] == 0)
+                if (n % basePrime == 0)
                 {
+                    factors.Add(basePrime);
                     do
                     {
-                        factors.Add(smallPrimes[i]);
-                        t /= smallPrimes[i];
-                    } while (t % smallPrimes[i] == 0);
-                }
-            }
-
-            if (t == 1)
-            {
-                return factors;
-            }
-
-            var pattern = new long[] { 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 4, 14, 4, 6, 2, 10, 2, 6, 6, 4, 2, 4, 6, 2, 10, 2, 4, 2, 12, 10, 2, 4, 2, 4, 6, 2, 6, 4, 6, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 6, 8, 6, 10, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 6, 10, 2, 10, 2, 4, 2, 4, 6, 8, 4, 2, 4, 12, 2, 6, 4, 2, 6, 4, 6, 12, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 10, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 6, 6, 2, 6, 6, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 6, 4, 8, 6, 4, 6, 2, 4, 6, 8, 6, 4, 2, 10, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 8, 6, 4, 2, 4, 6, 6, 2, 6, 4, 8, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 6, 6, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 6, 4, 6, 2, 6, 4, 2, 4, 6, 6, 8, 4, 2, 6, 10, 8, 4, 2, 4, 2, 4, 8, 10, 6, 2, 4, 8, 6, 6, 4, 2, 4, 6, 2, 6, 4, 6, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 6, 6, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 8, 4, 6, 2, 6, 6, 4, 2, 4, 6, 8, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 10, 2, 4, 6, 8, 6, 4, 2, 6, 4, 6, 8, 4, 6, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 6, 6, 2, 6, 6, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 10, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 12, 6, 4, 6, 2, 4, 6, 2, 12, 4, 2, 4, 8, 6, 4, 2, 4, 2, 10, 2, 10, 6, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 10, 6, 8, 6, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 6, 4, 6, 2, 6, 4, 2, 4, 2, 10, 12, 2, 4, 2, 10, 2, 6, 4, 2, 4, 6, 6, 2, 10, 2, 6, 4, 14, 4, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 12, 2, 12 };
-            var basePrime = 13L;
-            var patternIndex = -1;
-
-            //TODO: check for t == 1?
-            while (!BoilMathFunctions.IsPrimeHybrid(t))
-            {
-                if (t % basePrime == 0)
-                {
-                    do
-                    {
-                        factors.Add(basePrime);
-                        t /= basePrime;
-                    } while (t % basePrime == 0);
+                        n /= basePrime;
+                    } while (n % basePrime == 0);
                 }
 
                 patternIndex++;
@@ -343,8 +307,6 @@ namespace Boilerplate
 
                 basePrime += pattern[patternIndex];
             }
-
-            factors.Add(t);
 
             return factors;
         }

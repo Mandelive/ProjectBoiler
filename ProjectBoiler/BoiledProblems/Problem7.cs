@@ -9,19 +9,26 @@ namespace BoiledProblems
 {
     public class Problem7 : BaseProblem
     {
-        public Problem7(): base(
-            7,
-            @"MTAwMDFzdCBwcmltZQ==",
-            @"QnkgbGlzdGluZyB0aGUgZmlyc3Qgc2l4IHByaW1lIG51bWJlcnM6IDIsIDMsIDUsIDcsIDExLCBhbmQgMTMsIHdlIGNhbiBzZWUgdGhhdCB0aGUgNnRoIHByaW1lIGlzIDEzLg0KDQpXaGF0IGlzIHRoZSAxMCAwMDFzdCBwcmltZSBudW1iZXI/DQo=",
-            new string[] {
-                "n:num - nth prime"
-            },
-            new string[] {
-                "10001"
-            }
-        ) {}
+        public Problem7()
+        {
+            Id = 7;
+            Title = @"MTAwMDFzdCBwcmltZQ==";
+            Description = @"QnkgbGlzdGluZyB0aGUgZmlyc3Qgc2l4IHByaW1lIG51bWJlcnM6IDIsIDMsIDUsIDcsIDExLCBhbmQgMTMsIHdlIGNhbiBzZWUgdGhhdCB0aGUgNnRoIHByaW1lIGlzIDEzLg0KDQpXaGF0IGlzIHRoZSAxMCAwMDFzdCBwcmltZSBudW1iZXI/DQo=";
 
-        public override string Solve(string[] parameters)
+            parametersInfo = new string[]
+            {
+                "n:num - nth prime"
+            };
+
+            defaultParameters = new string[]
+            {
+                "10001"
+            };
+
+            ResetParameters();
+        }
+
+        public override string Solve()
         {
             var n = Int64.Parse(parameters[0]);
             return findNthPrime(n).ToString();

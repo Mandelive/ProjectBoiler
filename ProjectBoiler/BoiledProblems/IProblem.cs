@@ -8,11 +8,19 @@ namespace BoiledProblems
 {
     public interface IProblem
     {
-        int GetID();
-        string GetTitle();
-        string GetDescription();
+        int Id { get; }
+        string Title { get; }
+        string Description { get; }
+
+        int ParametersCount { get; }
+        
         string[] GetParametersInfo();
         string[] GetDefaultParameters();
-        string Solve(string[] parameters);
+        string[] GetParameters();
+
+        void ResetParameters();
+        void SetParameters(string[] parameters);
+        
+        string Solve();
     }
 }
