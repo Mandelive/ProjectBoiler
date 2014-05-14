@@ -184,12 +184,14 @@ namespace ProjectBoiler
         {
             if (tvProblems.SelectedNode.Text.StartsWith("Problem"))
             {
+                consoleBrowser.Document.Body.InnerText = "";
                 ChangeProblem();
                 ChangeParameters();
                 btnSolve.Enabled = true;
             }
             else
             {
+                //consoleBrowser.Document.Body.InnerText = "";
                 ClearCurrentProblem();
                 ClearParameters();
                 btnSolve.Enabled = false;

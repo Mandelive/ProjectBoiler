@@ -58,11 +58,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseProblem.cs" />
+    <Compile Include="Problem9.cs" />
+    <Compile Include="Problem8.cs" />
+    <Compile Include="Problem7.cs" />
+    <Compile Include="Problem6.cs" />
+    <Compile Include="Problem5.cs" />
+    <Compile Include="Problem4.cs" />
     <Compile Include="Problem3.cs" />
     <Compile Include="Problem2.cs" />
     <Compile Include="IProblem.cs" />
     <Compile Include="Problem1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Boilerplate\Boilerplate.csproj">
+      <Project>{0250cab5-bd64-4a46-a061-d802dd7429a2}</Project>
+      <Name>Boilerplate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

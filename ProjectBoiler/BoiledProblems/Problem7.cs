@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Boilerplate;
+
+namespace BoiledProblems
+{
+    public class Problem7 : BaseProblem
+    {
+        public Problem7(): base(
+            7,
+            @"MTAwMDFzdCBwcmltZQ==",
+            @"QnkgbGlzdGluZyB0aGUgZmlyc3Qgc2l4IHByaW1lIG51bWJlcnM6IDIsIDMsIDUsIDcsIDExLCBhbmQgMTMsIHdlIGNhbiBzZWUgdGhhdCB0aGUgNnRoIHByaW1lIGlzIDEzLg0KDQpXaGF0IGlzIHRoZSAxMCAwMDFzdCBwcmltZSBudW1iZXI/DQo=",
+            new string[] {
+                "n:num - nth prime"
+            },
+            new string[] {
+                "10001"
+            }
+        ) {}
+
+        public override string Solve(string[] parameters)
+        {
+            var n = Int64.Parse(parameters[0]);
+            return findNthPrime(n).ToString();
+        }
+
+        private long findNthPrime(long n)
+        {
+            var primes = BoilSequences.PrimesSequenceNth(n);
+
+            var result = primes.Last();
+
+            return result;
+        }
+    }
+}

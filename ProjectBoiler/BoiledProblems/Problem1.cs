@@ -13,7 +13,7 @@ namespace BoiledProblems
             @"TXVsdGlwbGVzIG9mIDMgYW5kIDU=", 
             @"SWYgd2UgbGlzdCBhbGwgdGhlIG5hdHVyYWwgbnVtYmVycyBiZWxvdyAxMCB0aGF0IGFyZSBtdWx0aXBsZXMgb2YgMyBvciA1LCB3ZSBnZXQgMywgNSwgNiBhbmQgOS4gVGhlIHN1bSBvZiB0aGVzZSBtdWx0aXBsZXMgaXMgMjMuDQoNCkZpbmQgdGhlIHN1bSBvZiBhbGwgdGhlIG11bHRpcGxlcyBvZiAzIG9yIDUgYmVsb3cgMTAwMC4=",
             new string[] {
-                "n:num - find the sum of the corresponding multiples below this number"
+                "n:num - upperlimit number"
             },
             new string[] {
                 "1000"
