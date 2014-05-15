@@ -101,7 +101,75 @@ namespace Boilerplate
 
         public static long LcmPrimeFactorization(List<long> nums)
         {
-            return 0;
+            //TODO
+            throw new NotImplementedException("TODO");
+        }
+
+        public static long DivisorSigma(long n)
+        {
+            if (n < 3)
+            {
+                return n;
+            }
+            else if (IsPrimeHybrid(n))
+            {
+                return 2;
+            }
+
+            var repeats = new List<int>();
+            var primeFactors = 0;
+
+            var smallPrimes = new long[] { 2, 3, 5, 7, 11 };
+            for (int i = 0; i < smallPrimes.Length; i++)
+            {
+                if (n % smallPrimes[i] == 0)
+                {                   
+                    repeats.Add(0);
+                    do 
+                    {
+                        repeats[primeFactors]++;
+                        n /= smallPrimes[i];
+                    } while (n % smallPrimes[i] == 0);
+                    primeFactors++;
+                }
+            }
+
+            var pattern = new long[] { 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 4, 14, 4, 6, 2, 10, 2, 6, 6, 4, 2, 4, 6, 2, 10, 2, 4, 2, 12, 10, 2, 4, 2, 4, 6, 2, 6, 4, 6, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 6, 8, 6, 10, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 6, 10, 2, 10, 2, 4, 2, 4, 6, 8, 4, 2, 4, 12, 2, 6, 4, 2, 6, 4, 6, 12, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 10, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 6, 6, 2, 6, 6, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 6, 4, 8, 6, 4, 6, 2, 4, 6, 8, 6, 4, 2, 10, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 8, 6, 4, 2, 4, 6, 6, 2, 6, 4, 8, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 6, 6, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 6, 4, 6, 2, 6, 4, 2, 4, 6, 6, 8, 4, 2, 6, 10, 8, 4, 2, 4, 2, 4, 8, 10, 6, 2, 4, 8, 6, 6, 4, 2, 4, 6, 2, 6, 4, 6, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 6, 6, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 8, 4, 6, 2, 6, 6, 4, 2, 4, 6, 8, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 10, 2, 4, 6, 8, 6, 4, 2, 6, 4, 6, 8, 4, 6, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 6, 6, 2, 6, 6, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 10, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 12, 6, 4, 6, 2, 4, 6, 2, 12, 4, 2, 4, 8, 6, 4, 2, 4, 2, 10, 2, 10, 6, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 10, 6, 8, 6, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 6, 4, 6, 2, 6, 4, 2, 4, 2, 10, 12, 2, 4, 2, 10, 2, 6, 4, 2, 4, 6, 6, 2, 10, 2, 6, 4, 14, 4, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 12, 2, 12 };
+            var basePrime = 13L;
+            var patternIndex = -1;
+
+            while (n > 1)
+            {
+                if (n % basePrime == 0)
+                {
+                    repeats.Add(0);
+                    do
+                    {
+                        repeats[primeFactors]++;
+                        n /= basePrime;
+                    } while (n % basePrime == 0);
+                    primeFactors++;
+                }
+
+                patternIndex++;
+                if (patternIndex == pattern.Length)
+                {
+                    patternIndex = 0;
+                }
+
+                basePrime += pattern[patternIndex];
+            }
+
+            var productOfRepeats = 1L;
+
+            for (int i = 0; i < repeats.Count; i++)
+            {
+                productOfRepeats *= (repeats[i] + 1);
+            }
+
+            var result = productOfRepeats;
+
+            return result;
         }
 
         public static bool IsPrimeWheelFactorization(long n)

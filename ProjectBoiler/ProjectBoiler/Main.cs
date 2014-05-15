@@ -33,20 +33,23 @@ namespace ProjectBoiler
         {
             var problems = from t in Assembly.GetAssembly(typeof(BoiledProblems.IProblem)).GetTypes()
                            where t.IsClass && t.Name.StartsWith("Problem")
-                           orderby t.Name
+                           //orderby t.Name.Substring("Problem".Length)
                            select t;
 
             foreach (var p in problems)
             {
-                tvProblems.Nodes[0].Nodes.Add(p.Name);
+                var problem = (IProblem)Activator.CreateInstance(p);
+                tvProblems.Nodes[0].Nodes.Add(problem.Id.ToString("000"), problem.Id.ToString("000: ") + problem.Title);
             }
+
+            tvProblems.Sort();
 
             tvProblems.ExpandAll();
         }
 
         private void InitializeConsoleBrowser()
         {
-            var page = @"<html><head></head><body style=""background-color: #000000; color: #ffffff; font-family: Consolas, ""Courier New"", ""Lucida Console"", Arial;""></body><html>";
+            var page = @"<html><head></head><body style=""background-color: #000000; color: #ffffff; font-family: Consolas, 'Courier New', 'DejaVu Sans Mono';""></body><html>";
             var ms = new MemoryStream();
             var bytes = Encoding.UTF8.GetBytes(page);
             ms.Write(bytes, 0, bytes.Length);
@@ -56,9 +59,9 @@ namespace ProjectBoiler
 
         private void ChangeProblem()
         {
-            var selectedProblem = tvProblems.SelectedNode.Text;
+            var selectedProblemNumber = Int32.Parse(tvProblems.SelectedNode.Name.Substring(0, 3));
             var problemType = (from t in Assembly.GetAssembly(typeof(BoiledProblems.IProblem)).GetTypes()
-                               where t.IsClass && t.Name == selectedProblem
+                               where t.IsClass && t.Name == ("Problem" + selectedProblemNumber)
                                select t).First();
 
             currentProblem = (IProblem)Activator.CreateInstance(problemType);
@@ -82,17 +85,17 @@ namespace ProjectBoiler
 
         private void ChangeParameters()
         {
-            var paramsInfo = currentProblem.GetParametersInfo();
-            var defaultParams = currentProblem.GetDefaultParameters();
+            var parametersInfo = currentProblem.GetParametersInfo();
+            var defaultParameters = currentProblem.GetDefaultParameters();
 
             for (int i = 0; i < 5; i++)
             {
                 var label = (Label)Controls.Find("lblParam" + (i + 1), true).First();
                 var input = (TextBox)Controls.Find("txtParam" + (i + 1), true).First();
-                if (i < paramsInfo.Length)
+                if (i < parametersInfo.Length)
                 {
-                    label.Text = paramsInfo[i].Substring(0, paramsInfo[i].IndexOf(' '));
-                    input.Text = defaultParams[i];
+                    label.Text = parametersInfo[i].Substring(0, parametersInfo[i].IndexOf(' '));
+                    input.Text = defaultParameters[i];
                     label.Enabled = true;
                     input.Enabled = true;
                 }
@@ -140,15 +143,8 @@ namespace ProjectBoiler
             Control paramsTextBoxContainer = txtParam1.Parent;
             for (int i = 0; i < currentProblem.ParametersCount; i++)
             {
-                for (int j = 0; j < paramsTextBoxContainer.Controls.Count; j++)
-                {
-                    var c = paramsTextBoxContainer.Controls[j];
-                    if (c is TextBox && c.Name.EndsWith("Param" + (i + 1)))
-                    {
-                        parameters[i] = c.Text;
-                        break;
-                    }
-                }
+                var paramTextBox = paramsTextBoxContainer.Controls.Find("txtParam" + (i + 1), false).First();
+                parameters[i] = paramTextBox.Text;
             }
             currentProblem.SetParameters(parameters);
 
@@ -192,12 +188,12 @@ namespace ProjectBoiler
 
         private void splitContainer1_SizeChanged(object sender, EventArgs e)
         {
-            splitContainer1.SplitterDistance = 240;
+            splitContainer1.SplitterDistance = 320;
         }
 
         private void tvProblems_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (tvProblems.SelectedNode.Text.StartsWith("Problem"))
+            if (tvProblems.SelectedNode.Level > 0)
             {
                 consoleBrowser.Document.Body.InnerText = "";
                 ChangeProblem();
@@ -206,6 +202,10 @@ namespace ProjectBoiler
             }
             else
             {
+                if (consoleBrowser.ReadyState == WebBrowserReadyState.Complete)
+                {
+                    consoleBrowser.Document.Body.InnerText = "";
+                }
                 ClearCurrentProblem();
                 ClearParameters();
                 btnSolve.Enabled = false;
@@ -216,7 +216,7 @@ namespace ProjectBoiler
         {
             tvProblems.Focus();
             consoleBrowser.Document.Body.InnerText = "";
-            if (tvProblems.SelectedNode.Text.StartsWith("Problem"))
+            if (tvProblems.SelectedNode.Level > 0)
             {
                 ChangeProblem();
             }

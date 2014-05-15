@@ -11,5 +11,6 @@ namespace Boilerplate
         public const double phi = 1.61803398875;
         public const double pi = 3.14159265359;
         public const double e = 2.71828182846;
+        public const double gamma = 0.57721566490;
     }
 }

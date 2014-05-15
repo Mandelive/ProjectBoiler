@@ -12,20 +12,14 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            long n = 33333332;
+            long n = 100;
+            //Console.WriteLine("n: {0}  divisors: {1} ", n, BoilMathFunctions.DivisorSigma(n));
 
-            //var factors = BoilSequences.PrimeFactorizationWheelFactorization(n);
-
-            //for (int i = 0; i < factors.Count; i++)
-            //{
-            //    Console.Write("{0} ", factors[i]);
-            //}
-
-            Console.WriteLine("HB: {0}ms", Benchmark(() =>
+            Console.WriteLine("DivisorsSigma: {0}ms", Benchmark(() =>
             {
                 for (int i = 0; i < n; i++)
                 {
-                    BoilMathFunctions.IsPrimeHybrid(i);
+                    Console.WriteLine("i: {0} sigma: {1} ", i, BoilMathFunctions.DivisorSigma(i));
                 }
             }, 1, false));
             

@@ -30,11 +30,11 @@ namespace BoiledProblems
 
         public override string Solve()
         {
-            var n = Int64.Parse(parameters[0]);
+            var n = Int32.Parse(parameters[0]);
             return findNthPrime(n).ToString();
         }
 
-        private long findNthPrime(long n)
+        private long findNthPrime(int n)
         {
             var primes = BoilSequences.PrimesSequenceNth(n);
 
