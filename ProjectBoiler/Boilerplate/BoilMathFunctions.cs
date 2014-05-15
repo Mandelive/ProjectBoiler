@@ -124,7 +124,7 @@ namespace Boilerplate
             {
                 if (n % smallPrimes[i] == 0)
                 {                   
-                    repeats.Add(0);
+                    repeats.Add(1);
                     do 
                     {
                         repeats[primeFactors]++;
@@ -140,9 +140,15 @@ namespace Boilerplate
 
             while (n > 1)
             {
-                if (n % basePrime == 0)
+                if (basePrime * basePrime > n)
                 {
-                    repeats.Add(0);
+                    repeats.Add(2);
+                    primeFactors++;
+                    break;
+                }
+                else if (n % basePrime == 0)
+                {
+                    repeats.Add(1);
                     do
                     {
                         repeats[primeFactors]++;
@@ -164,7 +170,7 @@ namespace Boilerplate
 
             for (int i = 0; i < repeats.Count; i++)
             {
-                productOfRepeats *= (repeats[i] + 1);
+                productOfRepeats *= repeats[i];
             }
 
             var result = productOfRepeats;

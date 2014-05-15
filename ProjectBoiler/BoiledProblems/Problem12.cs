@@ -36,17 +36,28 @@ namespace BoiledProblems
 
         private long findSumOfPrimesBelow(long n)
         {
-
-            var t = (n - 1) * ((n - 2) / 2); //experimental, not based on proven math
-            var i = n - 1;
-
-            while (BoilMathFunctions.DivisorSigma(t) < n)
+            var t0 = (n - 1);
+            if ((t0 & 1) == 0)
             {
-                t += i;
-                i++;
+                t0 = (n - 2);
+            }
+            var d0 = BoilMathFunctions.DivisorSigma(t0);
+
+            var t1 = 0L;
+            var d1 = 0L;
+
+            var divisors = 0L;
+
+            while (divisors < n)
+            {
+                t0++;
+                t1 = ((t0 & 1) == 0? t0 >> 1 : t0);
+                d1 = BoilMathFunctions.DivisorSigma(t1);
+                divisors = d0 * d1;
+                d0 = d1;
             }
 
-            var result = t;
+            var result = t0 * (t0 - 1) / 2;
 
             return result;
         }
