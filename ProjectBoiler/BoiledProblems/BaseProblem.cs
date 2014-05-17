@@ -88,6 +88,10 @@ namespace BoiledProblems
                         case "str":
                             this.parameters[i] = parameters[i];
                             break;
+                        case "dat":
+                            var dat = DateTime.Parse(parameters[i]);
+                            this.parameters[i] = parameters[i];
+                            break;
                     }
                 }
             }

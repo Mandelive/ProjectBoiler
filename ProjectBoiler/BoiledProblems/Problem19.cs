@@ -21,7 +21,7 @@ namespace BoiledProblems
             {
                 "s:dat - start date",
                 "e:dat - end date",
-                "w:str - weekday (Sunday to Saturday)"
+                "w:str - weekday (Monday to Sunday)"
             };
 
             defaultParameters = new string[]
@@ -36,12 +36,70 @@ namespace BoiledProblems
 
         public override string Solve()
         {
-            return findMaximumTriangleSum().ToString();
+            var s = DateTime.Parse(parameters[0]);
+            var e = DateTime.Parse(parameters[1]);
+            var w = parameters[2];
+
+            return findNumberOfWeekdaysBetween(s, e, w).ToString();
         }
 
-        private long findMaximumTriangleSum()
+        private long findNumberOfWeekdaysBetween(DateTime s, DateTime e, string w)
         {
+            var weekdays = new List<string>(new string[] { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" });
+
+            var baseYear = 1900;
+            var baseMonth = 1;
+            var baseWeekday = weekdays.IndexOf(w);
+            var baseDay = 1 + baseWeekday;
+            
+            var monthdays = new int[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
             var result = 0L;
+            var inRange = false;
+            
+            for (; baseYear < e.Year || baseMonth < e.Month || baseDay < e.Day; baseDay += 7)
+            {
+                if (!inRange && baseYear >= s.Year && baseMonth >= s.Month && baseDay >= s.Day)
+                {
+                    inRange = true;
+                }
+
+                if (baseDay > monthdays[baseMonth])
+                {
+                    if (baseMonth == 2)
+                    {
+                        if ((baseYear % 100 != 0 && baseYear % 4 == 0) || baseYear % 400 == 0)
+                        {
+                            if (baseDay > 29)
+                            {
+                                baseDay = (baseDay - 1) % 29 + 1;
+                                baseMonth++;
+                            }
+                        }
+                        else
+                        {
+                            baseDay = (baseDay - 1) % 28 + 1;
+                            baseMonth++;
+                        }
+                    }
+                    else
+                    {
+                        baseDay = (baseDay - 1) % monthdays[baseMonth] + 1;
+                        baseMonth++;
+                    }
+                }
+
+                if (inRange && baseDay == 1)
+                {
+                    result++;
+                }
+
+                if (baseMonth > 12)
+                {
+                    baseMonth = 1;
+                    baseYear++;
+                }
+            }
 
             return result;
         }
