@@ -25,6 +25,13 @@ namespace ProjectBoiler
 
         private void Main_Load(object sender, EventArgs e)
         {
+            if (Screen.GetWorkingArea(this).Width > 1280)
+            {
+                this.Width = 1280;
+                this.Height = 720;
+                splitContainer2.SplitterDistance = splitContainer2.Height - 316;
+            }
+
             InitializeConsoleBrowser();
             PopulateProblemsTree();
         }
@@ -49,7 +56,7 @@ namespace ProjectBoiler
 
         private void InitializeConsoleBrowser()
         {
-            var page = @"<html><head></head><body style=""background-color: #000000; color: #ffffff; font-family: Consolas, 'Courier New', 'DejaVu Sans Mono';""></body><html>";
+            var page = @"<html><head></head><body style=""background-color: #1d1f21; color: #ffffff; padding: 8px; font-size: 11pt; font-family: Consolas, 'Courier New', 'DejaVu Sans Mono';""></body><html>";
             var ms = new MemoryStream();
             var bytes = Encoding.UTF8.GetBytes(page);
             ms.Write(bytes, 0, bytes.Length);
@@ -83,7 +90,7 @@ namespace ProjectBoiler
             WriteToConsole("br");
         }
 
-        private void ChangeParameters()
+        private void InitializeDefaultParameters()
         {
             var parametersInfo = currentProblem.GetParametersInfo();
             var defaultParameters = currentProblem.GetDefaultParameters();
@@ -157,10 +164,17 @@ namespace ProjectBoiler
                     parametersLine += parametersInfo[i].Substring(0, parametersInfo[i].IndexOf(':')) + ": " + parameters[i] + ", ";
                 }
             }
-            parametersLine = parametersLine.Substring(0, parametersLine.Length - 2);
 
             WriteToConsole("span", "Paramaters: ", true);
-            WriteToConsole("span", parametersLine);
+            if (currentProblem.ParametersCount > 0)
+            {
+                parametersLine = parametersLine.Substring(0, parametersLine.Length - 2);
+                WriteToConsole("span", parametersLine);
+            }
+            else
+            {
+                WriteToConsole("span", "none");
+            }
             WriteToConsole("br");
 
             var startTime = DateTime.UtcNow;
@@ -188,7 +202,7 @@ namespace ProjectBoiler
 
         private void splitContainer1_SizeChanged(object sender, EventArgs e)
         {
-            splitContainer1.SplitterDistance = 320;
+            splitContainer1.SplitterDistance = 360;
         }
 
         private void tvProblems_AfterSelect(object sender, TreeViewEventArgs e)
@@ -197,7 +211,7 @@ namespace ProjectBoiler
             {
                 consoleBrowser.Document.Body.InnerText = "";
                 ChangeProblem();
-                ChangeParameters();
+                InitializeDefaultParameters();
                 btnSolve.Enabled = true;
             }
             else
@@ -229,7 +243,7 @@ namespace ProjectBoiler
 
         private void WriteToConsole(string elementType, string text, bool emphasis)
         {
-            WriteToConsole(elementType, text, "color: #ee8844; font-weight: bold;");
+            WriteToConsole(elementType, text, "color: #f5871f; font-weight: bold;");
         }
 
         private void WriteToConsole(string elementType, string text = "", string style = "")
@@ -246,6 +260,28 @@ namespace ProjectBoiler
             doc.Body.AppendChild(element);
 
             consoleBrowser.Document.Window.ScrollTo(0, Int16.MaxValue);
+        }
+
+        private void btnDefaultParams_Click(object sender, EventArgs e)
+        {
+            InitializeDefaultParameters();
+            txtParam1.Focus();
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (splitContainer1.SplitterDistance < 360)
+            {
+                splitContainer1.SplitterDistance = 360;
+            }
+        }
+
+        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (splitContainer2.Height - splitContainer2.SplitterDistance < 316)
+            {
+                splitContainer2.SplitterDistance = splitContainer2.Height - 316;
+            }
         }
     }
 }

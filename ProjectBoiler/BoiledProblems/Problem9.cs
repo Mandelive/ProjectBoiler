@@ -17,7 +17,7 @@ namespace BoiledProblems
 
             parametersInfo = new string[]
             {
-                "s:num - sum of pythagorean triplet"
+                "n:num - sum of pythagorean triplet"
             };
 
             defaultParameters = new string[]
@@ -30,17 +30,17 @@ namespace BoiledProblems
 
         public override string Solve()
         {
-            var s = Int64.Parse(parameters[0]);
-            return findProductOfPythagoreanTriplet(s).ToString();
+            var n = Int64.Parse(parameters[0]);
+            return findProductOfPythagoreanTriplet(n).ToString();
         }
 
-        private long findProductOfPythagoreanTriplet(long s)
+        private long findProductOfPythagoreanTriplet(long n)
         {
-            for (int a = 3; a < s / 3; a++)
+            for (int a = 3; a < n / 3; a++)
             {
-                for (int b = a + 1; b <= (s - a) / 2; b++)
+                for (int b = a + 1; b <= (n - a) / 2; b++)
                 {
-                    var c = s - (a + b);
+                    var c = n - (a + b);
                     if (c * c == (a * a) + (b * b))
                     {
                         return a * b * c;
