@@ -11,22 +11,22 @@ using Boilerplate;
 
 namespace BoiledProblems
 {
-    public class Problem23 : BaseProblem
+    public class Problem24 : BaseProblem
     {
-        public Problem23()
+        public Problem24()
         {
-            Id = 23;
-            Title = @"Tm9uLWFidW5kYW50IHN1bXM=";
-            Description = @"QSBwZXJmZWN0IG51bWJlciBpcyBhIG51bWJlciBmb3Igd2hpY2ggdGhlIHN1bSBvZiBpdHMgcHJvcGVyIGRpdmlzb3JzIGlzIGV4YWN0bHkgZXF1YWwgdG8gdGhlIG51bWJlci4gRm9yIGV4YW1wbGUsIHRoZSBzdW0gb2YgdGhlIHByb3BlciBkaXZpc29ycyBvZiAyOCB3b3VsZCBiZSAxICsgMiArIDQgKyA3ICsgMTQgPSAyOCwgd2hpY2ggbWVhbnMgdGhhdCAyOCBpcyBhIHBlcmZlY3QgbnVtYmVyLg0KDQpBIG51bWJlciBuIGlzIGNhbGxlZCBkZWZpY2llbnQgaWYgdGhlIHN1bSBvZiBpdHMgcHJvcGVyIGRpdmlzb3JzIGlzIGxlc3MgdGhhbiBuIGFuZCBpdCBpcyBjYWxsZWQgYWJ1bmRhbnQgaWYgdGhpcyBzdW0gZXhjZWVkcyBuLg0KDQpBcyAxMiBpcyB0aGUgc21hbGxlc3QgYWJ1bmRhbnQgbnVtYmVyLCAxICsgMiArIDMgKyA0ICsgNiA9IDE2LCB0aGUgc21hbGxlc3QgbnVtYmVyIHRoYXQgY2FuIGJlIHdyaXR0ZW4gYXMgdGhlIHN1bSBvZiB0d28gYWJ1bmRhbnQgbnVtYmVycyBpcyAyNC4gQnkgbWF0aGVtYXRpY2FsIGFuYWx5c2lzLCBpdCBjYW4gYmUgc2hvd24gdGhhdCBhbGwgaW50ZWdlcnMgZ3JlYXRlciB0aGFuIDI4MTIzIGNhbiBiZSB3cml0dGVuIGFzIHRoZSBzdW0gb2YgdHdvIGFidW5kYW50IG51bWJlcnMuIEhvd2V2ZXIsIHRoaXMgdXBwZXIgbGltaXQgY2Fubm90IGJlIHJlZHVjZWQgYW55IGZ1cnRoZXIgYnkgYW5hbHlzaXMgZXZlbiB0aG91Z2ggaXQgaXMga25vd24gdGhhdCB0aGUgZ3JlYXRlc3QgbnVtYmVyIHRoYXQgY2Fubm90IGJlIGV4cHJlc3NlZCBhcyB0aGUgc3VtIG9mIHR3byBhYnVuZGFudCBudW1iZXJzIGlzIGxlc3MgdGhhbiB0aGlzIGxpbWl0Lg0KDQpGaW5kIHRoZSBzdW0gb2YgYWxsIHRoZSBwb3NpdGl2ZSBpbnRlZ2VycyB3aGljaCBjYW5ub3QgYmUgd3JpdHRlbiBhcyB0aGUgc3VtIG9mIHR3byBhYnVuZGFudCBudW1iZXJzLg0K";
+            Id = 24;
+            Title = @"TGV4aWNvZ3JhcGhpYyBwZXJtdXRhdGlvbnM=";
+            Description = @"QSBwZXJtdXRhdGlvbiBpcyBhbiBvcmRlcmVkIGFycmFuZ2VtZW50IG9mIG9iamVjdHMuIEZvciBleGFtcGxlLCAzMTI0IGlzIG9uZSBwb3NzaWJsZSBwZXJtdXRhdGlvbiBvZiB0aGUgZGlnaXRzIDEsIDIsIDMgYW5kIDQuIElmIGFsbCBvZiB0aGUgcGVybXV0YXRpb25zIGFyZSBsaXN0ZWQgbnVtZXJpY2FsbHkgb3IgYWxwaGFiZXRpY2FsbHksIHdlIGNhbGwgaXQgbGV4aWNvZ3JhcGhpYyBvcmRlci4gVGhlIGxleGljb2dyYXBoaWMgcGVybXV0YXRpb25zIG9mIDAsIDEgYW5kIDIgYXJlOg0KDQowMTIgICAwMjEgICAxMDIgICAxMjAgICAyMDEgICAyMTANCg0KV2hhdCBpcyB0aGUgbWlsbGlvbnRoIGxleGljb2dyYXBoaWMgcGVybXV0YXRpb24gb2YgdGhlIGRpZ2l0cyAwLCAxLCAyLCAzLCA0LCA1LCA2LCA3LCA4IGFuZCA5Pw0K";
 
             parametersInfo = new string[]
             {
-                
+                "n:num - nth permutation"    
             };
 
             defaultParameters = new string[]
             {
-                
+                "1000000"
             };
 
             ResetParameters();
