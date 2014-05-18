@@ -92,6 +92,9 @@ namespace BoiledProblems
                             var dat = DateTime.Parse(parameters[i]);
                             this.parameters[i] = parameters[i];
                             break;
+                        case "fil":
+                            this.parameters[i] = parameters[i];
+                            break;
                     }
                 }
             }

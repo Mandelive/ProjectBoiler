@@ -105,7 +105,7 @@ namespace Boilerplate
             throw new NotImplementedException("TODO");
         }
 
-        public static long DivisorSigma(long n)
+        public static long DivisorSigma0(long n)
         {
             if (n < 3)
             {
@@ -143,7 +143,6 @@ namespace Boilerplate
                 if (basePrime * basePrime > n)
                 {
                     repeats.Add(2);
-                    primeFactors++;
                     break;
                 }
                 else if (n % basePrime == 0)
@@ -174,6 +173,93 @@ namespace Boilerplate
             }
 
             var result = productOfRepeats;
+
+            return result;
+        }
+
+        public static long DivisorSigma1(long n, bool aliquot = false)
+        {
+            if (n < 2)
+            {
+                return n;
+            }
+            else if (IsPrimeHybrid(n))
+            {
+                if (aliquot)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return n + 1;
+                }
+            }
+
+            var copyOfN = n;
+
+            var repeats = new List<int>();
+            var primes = new List<long>();
+
+            var smallPrimes = new long[] { 2, 3, 5, 7, 11 };
+            for (int i = 0; i < smallPrimes.Length; i++)
+            {
+                if (n % smallPrimes[i] == 0)
+                {
+                    repeats.Add(1);
+                    primes.Add(smallPrimes[i]);
+                    do
+                    {
+                        repeats[primes.Count - 1]++;
+                        n /= smallPrimes[i];
+                    } while (n % smallPrimes[i] == 0);
+                }
+            }
+
+            var pattern = new long[] { 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 4, 14, 4, 6, 2, 10, 2, 6, 6, 4, 2, 4, 6, 2, 10, 2, 4, 2, 12, 10, 2, 4, 2, 4, 6, 2, 6, 4, 6, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 6, 8, 6, 10, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 6, 10, 2, 10, 2, 4, 2, 4, 6, 8, 4, 2, 4, 12, 2, 6, 4, 2, 6, 4, 6, 12, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 10, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 6, 6, 2, 6, 6, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 6, 4, 8, 6, 4, 6, 2, 4, 6, 8, 6, 4, 2, 10, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 8, 6, 4, 2, 4, 6, 6, 2, 6, 4, 8, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 6, 6, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 2, 10, 2, 10, 2, 6, 4, 6, 2, 6, 4, 2, 4, 6, 6, 8, 4, 2, 6, 10, 8, 4, 2, 4, 2, 4, 8, 10, 6, 2, 4, 8, 6, 6, 4, 2, 4, 6, 2, 6, 4, 6, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 6, 6, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4, 8, 4, 6, 2, 6, 6, 4, 2, 4, 6, 8, 4, 2, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 10, 2, 4, 6, 8, 6, 4, 2, 6, 4, 6, 8, 4, 6, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 6, 6, 2, 6, 6, 4, 2, 10, 2, 10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 10, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2, 12, 6, 4, 6, 2, 4, 6, 2, 12, 4, 2, 4, 8, 6, 4, 2, 4, 2, 10, 2, 10, 6, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 10, 6, 8, 6, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 6, 4, 6, 2, 6, 4, 2, 4, 2, 10, 12, 2, 4, 2, 10, 2, 6, 4, 2, 4, 6, 6, 2, 10, 2, 6, 4, 14, 4, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 12, 2, 12 };
+            var basePrime = 13L;
+            var patternIndex = -1;
+
+            while (n > 1)
+            {
+                if (basePrime * basePrime > n)
+                {
+                    repeats.Add(2);
+                    primes.Add(n);
+                    break;
+                }
+                else if (n % basePrime == 0)
+                {
+                    repeats.Add(1);
+                    primes.Add(basePrime);
+                    do
+                    {
+                        repeats[primes.Count - 1]++;
+                        n /= basePrime;
+                    } while (n % basePrime == 0);
+                }
+
+                patternIndex++;
+                if (patternIndex == pattern.Length)
+                {
+                    patternIndex = 0;
+                }
+
+                basePrime += pattern[patternIndex];
+            }
+
+            var productOfRepeats = 1L;
+
+            for (int i = 0; i < repeats.Count; i++)
+            {
+                productOfRepeats *= (long)(0.1 + (Math.Pow(primes[i], repeats[i]) - 1) / (primes[i] - 1));
+            }
+
+            var result = productOfRepeats;
+
+            if (aliquot)
+            {
+                result -= copyOfN;
+            }
 
             return result;
         }

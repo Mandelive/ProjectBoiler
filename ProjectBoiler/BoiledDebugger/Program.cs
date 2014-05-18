@@ -17,9 +17,10 @@ namespace BoiledDebugger
 
             Console.WriteLine("DivisorsSigma: {0}ms", Benchmark(() =>
             {
-                for (int i = 0; i < n; i++)
+                for (int i = (int)n - 100; i <= n; i++)
                 {
-                    Console.WriteLine("i: {0} sigma: {1} ", i, BoilMathFunctions.DivisorSigma(i));
+                    Console.Write("i: {0} sigma0: {1} ", i, BoilMathFunctions.DivisorSigma0(i));
+                    Console.WriteLine(", sigma: {1} ", i, BoilMathFunctions.DivisorSigma1(i));
                 }
             }, 1, false));
             

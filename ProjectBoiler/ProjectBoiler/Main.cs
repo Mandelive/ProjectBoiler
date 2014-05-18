@@ -99,12 +99,22 @@ namespace ProjectBoiler
             {
                 var label = (Label)Controls.Find("lblParam" + (i + 1), true).First();
                 var input = (TextBox)Controls.Find("txtParam" + (i + 1), true).First();
+                var browse = (Button)Controls.Find("btnBrowseParam" + (i + 1), true).First();
                 if (i < parametersInfo.Length)
                 {
                     label.Text = parametersInfo[i].Substring(0, parametersInfo[i].IndexOf(' '));
                     input.Text = defaultParameters[i];
                     label.Enabled = true;
                     input.Enabled = true;
+
+                    if (label.Text.Substring(2) == "fil")
+                    {
+                        browse.Visible = true;
+                    }
+                    else
+                    {
+                        browse.Visible = false;
+                    }
                 }
                 else
                 {
@@ -112,6 +122,7 @@ namespace ProjectBoiler
                     input.Text = "";
                     label.Enabled = false;
                     input.Enabled = false;
+                    browse.Visible = false;
                 }
             }
         }
@@ -153,7 +164,18 @@ namespace ProjectBoiler
                 var paramTextBox = paramsTextBoxContainer.Controls.Find("txtParam" + (i + 1), false).First();
                 parameters[i] = paramTextBox.Text;
             }
-            currentProblem.SetParameters(parameters);
+
+            try
+            {
+                currentProblem.SetParameters(parameters);
+            }
+            catch (Exception e)
+            {
+                WriteToConsole("span", "ERROR: ", true);
+                WriteToConsole("span", e.Message);
+                WriteToConsole("br");
+                return;
+            }
 
             var parametersInfo = currentProblem.GetParametersInfo();
             var parametersLine = "";
@@ -177,22 +199,33 @@ namespace ProjectBoiler
             }
             WriteToConsole("br");
 
-            var startTime = DateTime.UtcNow;
-            var t = new Task<string>(() => currentProblem.Solve());
-            t.Start();
-            var result = await t;
-            var endTime = DateTime.UtcNow;
+            try
+            {
+                var startTime = DateTime.UtcNow;
+                var t = new Task<string>(() => currentProblem.Solve());
+                t.Start();
+                var result = await t;
+                var endTime = DateTime.UtcNow;
 
-            var totalTime = endTime - startTime;
+                var totalTime = endTime - startTime;
 
-            WriteToConsole("span", "Answer: ", true);
-            WriteToConsole("span", result);
-            WriteToConsole("br");
+                WriteToConsole("span", "Answer: ", true);
+                WriteToConsole("span", result);
+                WriteToConsole("br");
 
-            WriteToConsole("span", "Time elapsed: ", true);
-            WriteToConsole("span", Math.Round(totalTime.TotalMilliseconds / 1000d, 3).ToString("0.000s"));
-            WriteToConsole("br");
-            WriteToConsole("br");
+                WriteToConsole("span", "Time elapsed: ", true);
+                WriteToConsole("span", Math.Round(totalTime.TotalMilliseconds / 1000d, 3).ToString("0.000s"));
+                WriteToConsole("br");
+                WriteToConsole("br");
+            }
+            catch (Exception e)
+            {
+                WriteToConsole("br");
+                WriteToConsole("span", "ERROR: ", true);
+                WriteToConsole("span", e.Message);
+                WriteToConsole("br");
+                WriteToConsole("br");
+            }
         }
 
         private void consoleBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -281,6 +314,17 @@ namespace ProjectBoiler
             if (splitContainer2.Height - splitContainer2.SplitterDistance < 316)
             {
                 splitContainer2.SplitterDistance = splitContainer2.Height - 316;
+            }
+        }
+
+        private void btnBrowseParamX_Click(object sender, EventArgs e)
+        {
+            var browse = (Button)sender;
+            var input = (TextBox)Controls.Find("txtParam" + browse.Name[browse.Name.Length - 1], true).First();
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                input.Text = openFileDialog.FileName;
             }
         }
     }

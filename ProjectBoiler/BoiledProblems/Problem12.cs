@@ -41,7 +41,7 @@ namespace BoiledProblems
             {
                 t0 = (n - 2);
             }
-            var d0 = BoilMathFunctions.DivisorSigma(t0);
+            var d0 = BoilMathFunctions.DivisorSigma0(t0);
 
             var t1 = 0L;
             var d1 = 0L;
@@ -52,7 +52,7 @@ namespace BoiledProblems
             {
                 t0++;
                 t1 = ((t0 & 1) == 0? t0 >> 1 : t0);
-                d1 = BoilMathFunctions.DivisorSigma(t1);
+                d1 = BoilMathFunctions.DivisorSigma0(t1);
                 divisors = d0 * d1;
                 d0 = d1;
             }
