@@ -11,11 +11,6 @@ namespace Boilerplate
     {
         public static long ModPow(long b, long e, long n)
         {
-            //if (b != 0 && Int64.MaxValue / (b % n) < n - 1)
-            //{
-            //    throw new OverflowException("Cannot handle ModPow for base " + b + " and modulus " + n + ".");
-            //}
-
             var result = 1L;
             b = b % n;
 
@@ -460,6 +455,155 @@ namespace Boilerplate
             }
 
             return IsPrimeMillerRabinBigInteger(n);
+        }
+
+        public static BigInteger FactorialBigInteger(long n)
+        {
+            if (n < 21)
+            {
+                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
+                return new BigInteger(factorialLookup[n]);
+            }
+
+            var result = new BigInteger(2432902008176640000);
+
+            var oddPairs = BigInteger.One;
+            var mid = (n - 20) >> 1;
+            var start = 21L;
+
+            var stage1 = new BigInteger[mid];
+
+            if ((n & 1) == 1)
+            {
+                oddPairs = new BigInteger(21);
+                start++;
+            }
+
+            for (long i = 0; i < mid; i++)
+            {
+                stage1[i] = BigInteger.Multiply(start + i, n - i);
+            }
+
+            var previousStage = stage1;
+            var currentStage = stage1;
+
+            while (mid > 1)
+            {
+                mid >>= 1;
+                start = 0;
+
+                if ((previousStage.Length & 1) == 1)
+                {
+                    oddPairs *= previousStage[0];
+                    start = 1;
+                }
+
+                currentStage = new BigInteger[mid];
+
+                for (int i = 0; i < mid; i++)
+                {
+                    currentStage[i] = BigInteger.Multiply(previousStage[start + i], previousStage[previousStage.Length - i - 1]);
+                }
+
+                previousStage = currentStage;
+            }
+
+            if (!oddPairs.IsOne)
+            {
+                result *= oddPairs;
+            }
+
+            if (currentStage != null && currentStage.Length > 0)
+            {
+                result *= currentStage[0];
+            }
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom2(long n)
+        {
+            if (n < 21)
+            {
+                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
+                return new BigInteger(factorialLookup[n]);
+            }
+
+            var result = new BigInteger(2432902008176640000);
+
+            for (long i = 21; i <= n; i++)
+            {
+                result *= i;
+            }
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom3(long n)
+        {
+            if (n < 21)
+            {
+                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
+                return new BigInteger(factorialLookup[n]);
+            }
+
+            var result = new BigInteger(9280784638125); // 20! / 2^18
+            var mid = n >> 1;
+
+            for (long i = 11; i <= mid; i++)
+            {
+                result *= i * ((i << 1) - 1);
+            }
+
+            if ((n & 1) == 1)
+            {
+                result *= n;
+            }
+
+            var shfits = (int)((n - 20) >> 1) + 18;
+            result = result << shfits;
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom4(long n)
+        {
+            if (n < 21)
+            {
+                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
+                return new BigInteger(factorialLookup[n]);
+            }
+
+            var result = new BigInteger(9280784638125); // 20! / 2^18
+            var mid = n >> 1;
+
+            var subProducts = new List<long>();
+
+            for (long i = 11; i <= mid; i++)
+            {
+                subProducts.Add(i * ((i << 1) - 1));
+            }
+
+            if ((n & 1) == 1)
+            {
+                subProducts.Add(n);
+            }
+
+            for (int i = 0; i < subProducts.Count; i++)
+            {
+                result *= subProducts[i];
+            }
+
+            var shfits = (int)((n - 20) >> 1) + 18;
+            result = result << shfits;
+
+            return result;
+        }
+
+        public static double FactorialStirling(long n)
+        {
+            var result = 0d;
+            return result;
         }
     }
 }

@@ -34,67 +34,13 @@ namespace BoiledProblems
 
         public override string Solve()
         {
-            return findSumOfIntegersNotEqualToSumOfTwoAbundants().ToString();
+            var n = Int64.Parse(parameters[0]);
+            return findLexicographicPermutation(n).ToString();
         }
 
-        private long findSumOfIntegersNotEqualToSumOfTwoAbundants()
+        private long findLexicographicPermutation(long n)
         {
-            var upperlimit = 20162;
-
-            var abundantNumbers = new List<int>(upperlimit / 3);
-
-            var spider = new List<int>[System.Environment.ProcessorCount];
-            for (int i = 0; i < spider.Length; i++)
-            {
-                spider[i] = new List<int>(100);
-            }
-
-            var interval = upperlimit / spider.Length;
-            
-            Parallel.For(0, spider.Length, s =>
-            {
-                var index = s;
-                for (int i = index * interval + 1; i < (index + 1) * interval; i++)
-                {
-                    if (i < BoilMathFunctions.DivisorSigma1(i, true))
-                    {
-                        spider[index].Add(i);
-                    }
-                }
-            });
-
-            for (int i = 0; i < spider.Length; i++)
-            {
-                abundantNumbers.AddRange(spider[i]);
-            }
-
-            var sumOfTwoAbundants = new bool[upperlimit];
-
-            Parallel.For(0, abundantNumbers.Count, i =>
-            {
-                for (int j = i; j < abundantNumbers.Count; j++)
-                {
-                    var sum = abundantNumbers[i] + abundantNumbers[j];
-                    if (sum >= upperlimit)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        sumOfTwoAbundants[sum] = true;
-                    }
-                }
-            });
-
             var result = 0L;
-
-            for (int i = 0; i < upperlimit; i++)
-            {
-                if (!sumOfTwoAbundants[i])
-                {
-                    result += i;
-                }
-            }
 
             return result;
         }
