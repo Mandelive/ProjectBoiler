@@ -12,32 +12,18 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            long n = 100000;
+            int n = 100000;
 
-            //Console.WriteLine("FactorialCustom2: {0}ms", Benchmark(() =>
-            //{
-            //    for (long i = n - 30; i <= n; i++)
-            //    {
-            //        Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom3(i) == BoilMathFunctions.FactorialCustom4(i));
-            //    }
-            //}, 1, false));
-
-            Console.WriteLine("FactorialCustom3: {0}ms", Benchmark(() =>
+            Console.WriteLine("Factorial: {0}ms", Benchmark(() =>
             {
-                for (long i = n; i <= n; i++)
-                {
-                    BoilMathFunctions.FactorialCustom3(i);
-                }
+                //BoilMathFunctions.FactorialSplitRecursive(n);
+                BoilMathFunctions.FactorialCustom3(n);
+                //for (int i = n; i <= n; i++)
+                //{
+                //    BoilMathFunctions.FactorialCustom3(i);
+                //}
             }, 1, false));
 
-            Console.WriteLine("FactorialCustom4: {0}ms", Benchmark(() =>
-            {
-                for (long i = n; i <= n; i++)
-                {
-                    BoilMathFunctions.FactorialCustom4(i);
-                }
-            }, 1, false));
-            
             Console.ReadLine();
         }
 

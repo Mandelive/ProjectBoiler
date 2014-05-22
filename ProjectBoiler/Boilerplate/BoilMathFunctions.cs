@@ -457,15 +457,15 @@ namespace Boilerplate
             return IsPrimeMillerRabinBigInteger(n);
         }
 
-        public static BigInteger FactorialBigInteger(long n)
+
+        public static BigInteger FactorialBigInteger(int n)
         {
             if (n < 21)
             {
-                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
-                return new BigInteger(factorialLookup[n]);
+                return FactorialLong(n);
             }
 
-            var result = new BigInteger(2432902008176640000);
+            var result = new BigInteger(9280784638125); // 20! / 2^18
 
             var oddPairs = BigInteger.One;
             var mid = (n - 20) >> 1;
@@ -521,33 +521,16 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger FactorialCustom2(long n)
+        public static BigInteger FactorialCustom3(int n)
         {
             if (n < 21)
             {
-                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
-                return new BigInteger(factorialLookup[n]);
+                return FactorialLong(n);
             }
 
-            var result = new BigInteger(2432902008176640000);
+            var minified20Fact = new BigInteger(9280784638125); // 20! / 2^18
 
-            for (long i = 21; i <= n; i++)
-            {
-                result *= i;
-            }
-
-            return result;
-        }
-
-        public static BigInteger FactorialCustom3(long n)
-        {
-            if (n < 21)
-            {
-                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
-                return new BigInteger(factorialLookup[n]);
-            }
-
-            var result = new BigInteger(9280784638125); // 20! / 2^18
+            var result = BigInteger.One;
             var mid = n >> 1;
 
             for (long i = 11; i <= mid; i++)
@@ -560,44 +543,107 @@ namespace Boilerplate
                 result *= n;
             }
 
-            var shfits = (int)((n - 20) >> 1) + 18;
-            result = result << shfits;
+            var shifts = ((n - 20) >> 1) + 18;
+            result = (result * minified20Fact) << shifts;
 
             return result;
         }
 
-        public static BigInteger FactorialCustom4(long n)
+        public static BigInteger FactorialSplitRecursive(int n)
+        {
+            if (n < 2)
+            {
+                return FactorialLong(n);
+            }
+
+            var p = BigInteger.One;
+            var r = BigInteger.One;
+
+            int h = 0, high = 0, len = 0,  shift = 0;
+            int log2n = (int)Math.Floor(Math.Log(n) / Math.Log(2));
+
+            BigInteger currentN = BigInteger.One;
+
+            while (h != n)
+            {
+                shift += h;
+                h = n >> log2n--;
+                len = high;
+                high = (h - 1) | 1;
+                len = (high - len) / 2;
+
+                if (len > 0)
+                {
+                    FactorialSplitState fs = FactorialSplitProduct(len, currentN);
+                    currentN = fs.current;
+                    p *= fs.result;
+                    r *= p;
+                }
+            }
+
+            return r << shift;
+        }
+
+        private static FactorialSplitState FactorialSplitProduct(int n, BigInteger current)
+        {
+            int m = n / 2;
+            FactorialSplitState fs;
+            if (m == 0)
+            {
+                fs.current = current + 2;
+                fs.result = fs.current;
+                return fs;
+            }
+            if (n == 2)
+            {
+                fs.current = current + 4;
+                fs.result = (current + 2) * fs.current;
+                return fs;
+            }
+            fs = FactorialSplitProduct(n - m, current);
+            BigInteger t = fs.result;
+            fs = FactorialSplitProduct(m, fs.current);
+            fs.result *= t;
+            return fs;
+        }
+
+        private struct FactorialSplitState
+        {
+            public BigInteger result;
+            public BigInteger current;
+        }
+
+        public static long FactorialLong(long n)
         {
             if (n < 21)
             {
-                long[] factorialLookup = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000 };
-                return new BigInteger(factorialLookup[n]);
+                switch (n)
+                {
+                    case 0: return 1;
+                    case 1: return 1;
+                    case 2: return 2;
+                    case 3: return 6;
+                    case 4: return 24;
+                    case 5: return 120;
+                    case 6: return 720;
+                    case 7: return 5040;
+                    case 8: return 40320;
+                    case 9: return 362880;
+                    case 10: return 3628800;
+                    case 11: return 39916800;
+                    case 12: return 479001600;
+                    case 13: return 6227020800;
+                    case 14: return 87178291200;
+                    case 15: return 1307674368000;
+                    case 16: return 20922789888000;
+                    case 17: return 355687428096000;
+                    case 18: return 6402373705728000;
+                    case 19: return 121645100408832000;
+                    case 20: return 2432902008176640000;
+                }
             }
 
-            var result = new BigInteger(9280784638125); // 20! / 2^18
-            var mid = n >> 1;
-
-            var subProducts = new List<long>();
-
-            for (long i = 11; i <= mid; i++)
-            {
-                subProducts.Add(i * ((i << 1) - 1));
-            }
-
-            if ((n & 1) == 1)
-            {
-                subProducts.Add(n);
-            }
-
-            for (int i = 0; i < subProducts.Count; i++)
-            {
-                result *= subProducts[i];
-            }
-
-            var shfits = (int)((n - 20) >> 1) + 18;
-            result = result << shfits;
-
-            return result;
+            throw new OverflowException("Factortial of n > 20 cannot fit in Int64");
         }
 
         public static double FactorialStirling(long n)
