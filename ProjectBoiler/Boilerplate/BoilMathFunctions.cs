@@ -9,6 +9,12 @@ namespace Boilerplate
 {
     public class BoilMathFunctions
     {
+        private struct FactorialSplitState
+        {
+            public BigInteger result;
+            public BigInteger current;
+        }
+
         public static long ModPow(long b, long e, long n)
         {
             var result = 1L;
@@ -613,39 +619,50 @@ namespace Boilerplate
                 return n * FactorialCustom9(n - 1);
             }
 
-            var shifts = 0;
+            var result = BigInteger.One;
+            var doubleFactorial = BigInteger.One;
+            var powersOfTwo = 0;
+            var shifts = 1;
             var k = n;
+            if ((k & 1) == 0)
+            {
+                result *= k;
+                k--;
+            }
+            powersOfTwo += k >> 1;
+            var j = (k >> 1) + 1;
+            if ((j & 1) == 0)
+            {
+                j++;
+            }
 
             while (k > 33)
             {
+                doubleFactorial = DoubleFactorialBigInteger(k, j);
+                for (int s = 0; s < shifts; s++)
+                {
+                    result *= doubleFactorial;
+                }
                 shifts++;
                 k >>= 1;
+                if ((k & 1) == 0)
+                {
+                    result *= k;
+                    k--;
+                }
+                powersOfTwo += k;
+                j = (k >> 1) + 1;
+                if ((j & 1) == 0)
+                {
+                    j++;
+                }
             }
 
-            var evenTerms = BigInteger.One;
+            result *= DoubleFactorialLong(k);
+            k >>= 1;
+            powersOfTwo += k;
+            result *= FactorialLong(k);
 
-            if ((k & 1) == 0)
-            {
-                evenTerms *= k;
-                k--;
-            }
-
-            var doubleFactorial = DoubleFactorialBigInteger(k);
-            var result = doubleFactorial * FactorialLong(k >> 1);
-            var powersOfTwo = k >> 1;
-            var j = k + 2;
-            k = (k << 1) + 1;
-
-            for (int i = 1; i <= shifts; i++)
-            {
-                doubleFactorial *= DoubleFactorialBigInteger(k, j);
-                result *= doubleFactorial;
-                powersOfTwo += k << 1;
-                j = k + 2;
-                k = (k << 1) + 1;
-            }
-
-            result *= evenTerms;
             result <<= powersOfTwo;
 
             return result;
@@ -772,12 +789,6 @@ namespace Boilerplate
             fs = FactorialSplitProduct(m, fs.current);
             fs.result *= t;
             return fs;
-        }
-
-        private struct FactorialSplitState
-        {
-            public BigInteger result;
-            public BigInteger current;
         }
 
         public static long FactorialLong(long n)

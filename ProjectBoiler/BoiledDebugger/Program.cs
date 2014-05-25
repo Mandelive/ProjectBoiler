@@ -12,7 +12,7 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            int n = 50 + 34;
+            int n = 50 + 37;
 
             Console.WriteLine("Factorial3: {0}ms", Benchmark(() =>
             {
