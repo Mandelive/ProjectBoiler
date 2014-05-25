@@ -12,17 +12,33 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            int n = 100000;
+            int n = 50 + 34;
 
-            Console.WriteLine("Factorial: {0}ms", Benchmark(() =>
+            Console.WriteLine("Factorial3: {0}ms", Benchmark(() =>
             {
                 //BoilMathFunctions.FactorialSplitRecursive(n);
-                BoilMathFunctions.FactorialCustom3(n);
-                //for (int i = n; i <= n; i++)
-                //{
-                //    BoilMathFunctions.FactorialCustom3(i);
-                //}
+                //BoilMathFunctions.FactorialCustom3(n);
+                //BoilMathFunctions.FactorialCustom5(n);
+                //BoilMathFunctions.FactorialCustom8(n);
+                for (int i = n - 50; i <= n; i++)
+                {
+                    Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom8(i));
+                    Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom9(i));
+                }
             }, 1, false));
+
+            Console.WriteLine("Factorial8: {0}ms", Benchmark(() =>
+            {
+                //BoilMathFunctions.FactorialSplitRecursive(n);
+                //BoilMathFunctions.FactorialCustom3(n);
+                //BoilMathFunctions.FactorialCustom5(n);
+                //BoilMathFunctions.FactorialCustom8(n);
+                //BoilMathFunctions.DoubleFactorialBigInteger(n);
+                //for (int i = n - 50; i <= n; i++)
+                //{
+                //    Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom8(i) == BoilMathFunctions.FactorialCustom3(i));
+                //}
+            }, 1, true));
 
             Console.ReadLine();
         }

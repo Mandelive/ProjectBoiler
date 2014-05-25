@@ -457,7 +457,6 @@ namespace Boilerplate
             return IsPrimeMillerRabinBigInteger(n);
         }
 
-
         public static BigInteger FactorialBigInteger(int n)
         {
             if (n < 21)
@@ -545,6 +544,174 @@ namespace Boilerplate
 
             var shifts = ((n - 20) >> 1) + 18;
             result = (result * minified20Fact) << shifts;
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom5(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var minified20Fact = new BigInteger(9280784638125); // 20! / 2^18
+
+            var result = BigInteger.One;
+            long mid = n >> 1;
+
+            long upperTerm = ((n & 1) == 0 ? n - 1 : n);
+
+            for (long i = 11; i <= mid; i++)
+            {
+                result *= i * upperTerm;
+                upperTerm -= 2;
+            }
+
+            if ((n & 1) == 1)
+            {
+                result *= upperTerm;
+            }
+
+            var shifts = ((n - 20) >> 1) + 18;
+            result = (result * minified20Fact) << shifts;
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom8(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+            else if ((n & 1) == 0)
+            {
+                return n * FactorialCustom8(n - 1);
+            }
+            else if (n < 80000)
+            {
+                return FactorialCustom5(n);
+            }
+
+            var result = BigInteger.One;
+
+            result = DoubleFactorialBigInteger(n) * FactorialCustom8(n >> 1);
+            result <<= (n >> 1);
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom9(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+            else if ((n & 1) == 0)
+            {
+                return n * FactorialCustom9(n - 1);
+            }
+
+            var shifts = 0;
+            var k = n;
+
+            while (k > 33)
+            {
+                shifts++;
+                k >>= 1;
+            }
+
+            var evenTerms = BigInteger.One;
+
+            if ((k & 1) == 0)
+            {
+                evenTerms *= k;
+                k--;
+            }
+
+            var doubleFactorial = DoubleFactorialBigInteger(k);
+            var result = doubleFactorial * FactorialLong(k >> 1);
+            var powersOfTwo = k >> 1;
+            var j = k + 2;
+            k = (k << 1) + 1;
+
+            for (int i = 1; i <= shifts; i++)
+            {
+                doubleFactorial *= DoubleFactorialBigInteger(k, j);
+                result *= doubleFactorial;
+                powersOfTwo += k << 1;
+                j = k + 2;
+                k = (k << 1) + 1;
+            }
+
+            result *= evenTerms;
+            result <<= powersOfTwo;
+
+            return result;
+        }
+
+        public static BigInteger DoubleFactorialBigInteger(int n)
+        {
+            if (n < 34)
+            {
+                return DoubleFactorialLong(n);
+            }
+            else if ((n & 1) == 0)
+            {
+                throw new ArgumentException("Double Factorial function does not support even numbers");
+            }
+
+            var result = (BigInteger)n;
+            var upperTerm = (long)n - 2;
+            var lowerTerm = 3L;
+
+            while (lowerTerm < upperTerm)
+            {
+                result *= lowerTerm * upperTerm;
+                lowerTerm += 2;
+                upperTerm -= 2;
+            }
+
+            if (lowerTerm == upperTerm)
+            {
+                result *= lowerTerm;
+            }
+
+            return result;
+        }
+
+        public static BigInteger DoubleFactorialBigInteger(int n, int r)
+        {
+            if (r < 3)
+            {
+                return DoubleFactorialBigInteger(n);
+            }
+
+            if (n < 34)
+            {
+                return DoubleFactorialLong(n) / DoubleFactorialLong(r);
+            }
+            else if ((n & 1) == 0 || (r & 1) == 0)
+            {
+                throw new ArgumentException("Double Factorial function does not support even numbers");
+            }
+
+            var result = (BigInteger)n;
+            var upperTerm = (long)n - 2;
+            var lowerTerm = (long)r;
+
+            while (lowerTerm < upperTerm)
+            {
+                result *= lowerTerm * upperTerm;
+                lowerTerm += 2;
+                upperTerm -= 2;
+            }
+
+            if (lowerTerm == upperTerm)
+            {
+                result *= lowerTerm;
+            }
 
             return result;
         }
@@ -644,6 +811,35 @@ namespace Boilerplate
             }
 
             throw new OverflowException("Factortial of n > 20 cannot fit in Int64");
+        }
+
+        public static long DoubleFactorialLong(int n)
+        {
+            if (n < 34)
+            {
+                switch (n)
+                {
+                    case 1: return 1;
+                    case 3: return 3;
+                    case 5: return 15;
+                    case 7: return 105;
+                    case 9: return 945;
+                    case 11: return 10395;
+                    case 13: return 135135;
+                    case 15: return 2027025;
+                    case 17: return 34459425;
+                    case 19: return 654729075;
+                    case 21: return 13749310575;
+                    case 23: return 316234143225;
+                    case 25: return 7905853580625;
+                    case 27: return 213458046676875;
+                    case 29: return 6190283353629375;
+                    case 31: return 191898783962510625;
+                    case 33: return 6332659870762850625;
+                }
+            }
+
+            throw new OverflowException("Double Factortial of n > 33 cannot fit in Int64");
         }
 
         public static double FactorialStirling(long n)
