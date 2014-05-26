@@ -614,22 +614,18 @@ namespace Boilerplate
             {
                 return FactorialLong(n);
             }
-            else if ((n & 1) == 0)
-            {
-                return n * FactorialCustom9(n - 1);
-            }
 
             var result = BigInteger.One;
             var doubleFactorial = BigInteger.One;
             var powersOfTwo = 0;
             var shifts = 1;
+
             var k = n;
             if ((k & 1) == 0)
             {
                 result *= k;
                 k--;
             }
-            powersOfTwo += k >> 1;
             var j = (k >> 1) + 1;
             if ((j & 1) == 0)
             {
@@ -645,12 +641,13 @@ namespace Boilerplate
                 }
                 shifts++;
                 k >>= 1;
+                powersOfTwo += k;
                 if ((k & 1) == 0)
                 {
                     result *= k;
                     k--;
                 }
-                powersOfTwo += k;
+                
                 j = (k >> 1) + 1;
                 if ((j & 1) == 0)
                 {
@@ -658,7 +655,66 @@ namespace Boilerplate
                 }
             }
 
-            result *= DoubleFactorialLong(k);
+            doubleFactorial = DoubleFactorialLong(k);
+            for (int s = 0; s < shifts; s++)
+            {
+                result *= doubleFactorial;
+            }
+            k >>= 1;
+            powersOfTwo += k;
+            result *= FactorialLong(k);
+
+            result <<= powersOfTwo;
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom10(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var result = BigInteger.One;
+            var doubleFactorial = BigInteger.One;
+            var powersOfTwo = 0;
+            var shifts = 1;
+
+            var k = n;
+            if ((k & 1) == 0)
+            {
+                result *= k;
+                k--;
+            }
+            var j = (k >> 1) + 1;
+            if ((j & 1) == 0)
+            {
+                j++;
+            }
+
+            while (k > 33)
+            {
+                doubleFactorial = DoubleFactorialBigInteger(k, j);
+                result *= BigInteger.Pow(doubleFactorial, shifts);
+                shifts++;
+                k >>= 1;
+                powersOfTwo += k;
+                if ((k & 1) == 0)
+                {
+                    result *= k;
+                    k--;
+                }
+
+                j = (k >> 1) + 1;
+                if ((j & 1) == 0)
+                {
+                    j++;
+                }
+            }
+
+            doubleFactorial = DoubleFactorialLong(k);
+            result *= BigInteger.Pow(doubleFactorial, shifts);
             k >>= 1;
             powersOfTwo += k;
             result *= FactorialLong(k);
