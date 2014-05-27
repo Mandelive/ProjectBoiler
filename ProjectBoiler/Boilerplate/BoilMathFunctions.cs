@@ -724,6 +724,74 @@ namespace Boilerplate
             return result;
         }
 
+        public static BigInteger FactorialCustom11(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+            
+            int segmentEnd, segmentStart, evenSegement;
+            var shifts = 0;
+            var segments = new Stack<int[]>();
+
+            if ((n & 1) == 0)
+            {
+                evenSegement = n;
+                segmentEnd = n - 1;
+            }
+            else
+            {
+                evenSegement = 1;
+                segmentEnd = n;
+            }
+
+            while (n > 33)
+            {
+                n >>= 1;
+                shifts += n;
+                if ((n & 1) == 0)
+                {
+                    segmentStart = n + 1;
+                    segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
+                    evenSegement = n;
+                    segmentEnd = n - 1;
+                }
+                else
+                {
+                    segmentStart = n + 2;
+                    segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
+                    evenSegement = 1;
+                    segmentEnd = n;
+                }
+            }
+
+            n >>= 1;
+            shifts += n;
+            segmentStart = n;
+            
+            var doubleFactorial = DoubleFactorialBigInteger(segmentEnd);
+            var result = doubleFactorial * FactorialLong(n);
+            
+            while (segments.Count > 0)
+            {
+                var segment = segments.Pop();
+                doubleFactorial *= DoubleFactorialBigInteger(segment[0], segment[1]);
+                if (segment[3] == 1)
+                {
+                    result *= doubleFactorial;
+                }
+                else
+                {
+                    result *= segment[3] * doubleFactorial;
+                }
+            }
+
+            result <<= shifts;
+
+            return result;
+        }
+
         public static BigInteger DoubleFactorialBigInteger(int n)
         {
             if (n < 34)
