@@ -12,41 +12,27 @@ namespace BoiledDebugger
     {
         static void Main(string[] args)
         {
-            int n = 50000;
-            BoilMathFunctions.FactorialCustom5(100);
+            int r = 0;
+            int n = 100000;
+            
             BoilMathFunctions.FactorialCustom8(100);
-            Console.WriteLine("Factorial5: {0}ms", Benchmark(() =>
+            Console.WriteLine("Factorial8: {0}ms", Benchmark(() =>
             {
-                //BoilMathFunctions.FactorialSplitRecursive(n);
-                //BoilMathFunctions.FactorialCustom3(n);
-                //BoilMathFunctions.FactorialCustom5(n);
                 BoilMathFunctions.FactorialCustom8(n);
-                //BoilMathFunctions.FactorialCustom9(n);
-                //BoilMathFunctions.FactorialCustom10(n);
-                //for (int i = n - 5; i <= n; i++)
+                //for (int i = r; i <= n; i++)
                 //{
-                //    if (BoilMathFunctions.FactorialCustom5(i) != BoilMathFunctions.FactorialCustom10(i))
+                //    if (BoilMathFunctions.FactorialSolverFoundation(i) != BoilMathFunctions.FactorialCustom11(i))
                 //    {
-                //        Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom5(i));
-                //        Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom10(i));
+                //        Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialSolverFoundation(i));
+                //        Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom11(i));
                 //    }
                 //}
             }, 1, false));
-            BoilMathFunctions.FactorialCustom10(100);
-            Console.WriteLine("Factorial9: {0}ms", Benchmark(() =>
+
+            
+            Console.WriteLine("Factorial11: {0}ms", Benchmark(() =>
             {
-                //BoilMathFunctions.FactorialSplitRecursive(n);
-                //BoilMathFunctions.FactorialCustom3(n);
-                //BoilMathFunctions.FactorialCustom5(n);
-                //BoilMathFunctions.FactorialCustom8(n);
-                //BoilMathFunctions.FactorialCustom9(n);
-                //BoilMathFunctions.FactorialCustom9(n);
-                BoilMathFunctions.FactorialCustom10(n);
-                //BoilMathFunctions.DoubleFactorialBigInteger(n);
-                //for (int i = n - 50; i <= n; i++)
-                //{
-                //    Console.WriteLine("{0}!: {1}", i, BoilMathFunctions.FactorialCustom8(i) == BoilMathFunctions.FactorialCustom3(i));
-                //}
+                BoilMathFunctions.FactorialCustom11(n);
             }, 1, false));
 
             Console.ReadLine();

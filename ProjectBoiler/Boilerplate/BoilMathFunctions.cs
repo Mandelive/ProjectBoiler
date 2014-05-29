@@ -730,60 +730,44 @@ namespace Boilerplate
             {
                 return FactorialLong(n);
             }
-            
+
             int segmentEnd, segmentStart, evenSegement;
             var shifts = 0;
             var segments = new Stack<int[]>();
 
-            if ((n & 1) == 0)
+            do
             {
-                evenSegement = n;
-                segmentEnd = n - 1;
-            }
-            else
-            {
-                evenSegement = 1;
-                segmentEnd = n;
-            }
-
-            while (n > 33)
-            {
-                n >>= 1;
-                shifts += n;
                 if ((n & 1) == 0)
                 {
-                    segmentStart = n + 1;
-                    segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
                     evenSegement = n;
-                    segmentEnd = n - 1;
+                    n--;
                 }
                 else
                 {
-                    segmentStart = n + 2;
-                    segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
                     evenSegement = 1;
-                    segmentEnd = n;
                 }
-            }
+                segmentEnd = n;
+                n >>= 1;
+                shifts += n;
+                segmentStart = ((n & 1) == 0 ? n + 1 : n + 2);
+                segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
+            } while (n > 20);
 
-            n >>= 1;
-            shifts += n;
-            segmentStart = n;
-            
+            var segment = segments.Pop();
             var doubleFactorial = DoubleFactorialBigInteger(segmentEnd);
-            var result = doubleFactorial * FactorialLong(n);
-            
+            var result = evenSegement * doubleFactorial * FactorialBigInteger(n);
+
             while (segments.Count > 0)
             {
-                var segment = segments.Pop();
+                segment = segments.Pop();
                 doubleFactorial *= DoubleFactorialBigInteger(segment[0], segment[1]);
-                if (segment[3] == 1)
+                if (segment[2] == 1)
                 {
                     result *= doubleFactorial;
                 }
                 else
                 {
-                    result *= segment[3] * doubleFactorial;
+                    result *= segment[2] * doubleFactorial;
                 }
             }
 
@@ -792,69 +776,91 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger DoubleFactorialBigInteger(int n)
+        public static BigInteger FactorialCustom12(int n)
         {
-            if (n < 34)
+            if (n < 21)
             {
-                return DoubleFactorialLong(n);
-            }
-            else if ((n & 1) == 0)
-            {
-                throw new ArgumentException("Double Factorial function does not support even numbers");
+                return FactorialLong(n);
             }
 
-            var result = (BigInteger)n;
-            var upperTerm = (long)n - 2;
-            var lowerTerm = 3L;
+            int segmentEnd, segmentStart, evenSegement;
+            var shifts = 0;
+            var segments = new Stack<int[]>();
 
-            while (lowerTerm < upperTerm)
+            //TODO: Multiply double factorial lower terms by upper terms
+
+            do
             {
-                result *= lowerTerm * upperTerm;
-                lowerTerm += 2;
-                upperTerm -= 2;
+                if ((n & 1) == 0)
+                {
+                    evenSegement = n;
+                    n--;
+                }
+                else
+                {
+                    evenSegement = 1;
+                }
+                segmentEnd = n;
+                n >>= 1;
+                shifts += n;
+                segmentStart = ((n & 1) == 0 ? n + 1 : n + 2);
+                segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
+            } while (n > 20);
+
+            var segment = segments.Pop();
+            var doubleFactorial = DoubleFactorialBigInteger(segmentEnd);
+            var result = evenSegement * doubleFactorial * FactorialBigInteger(n);
+
+            while (segments.Count > 0)
+            {
+                segment = segments.Pop();
+                doubleFactorial *= DoubleFactorialBigInteger(segment[0], segment[1]);
+                if (segment[2] == 1)
+                {
+                    result *= doubleFactorial;
+                }
+                else
+                {
+                    result *= segment[2] * doubleFactorial;
+                }
             }
 
-            if (lowerTerm == upperTerm)
-            {
-                result *= lowerTerm;
-            }
+            result <<= shifts;
 
             return result;
         }
 
-        public static BigInteger DoubleFactorialBigInteger(int n, int r)
+        public static long FactorialLong(long n)
         {
-            if (r < 3)
+            if (n < 21)
             {
-                return DoubleFactorialBigInteger(n);
+                switch (n)
+                {
+                    case 0: return 1;
+                    case 1: return 1;
+                    case 2: return 2;
+                    case 3: return 6;
+                    case 4: return 24;
+                    case 5: return 120;
+                    case 6: return 720;
+                    case 7: return 5040;
+                    case 8: return 40320;
+                    case 9: return 362880;
+                    case 10: return 3628800;
+                    case 11: return 39916800;
+                    case 12: return 479001600;
+                    case 13: return 6227020800;
+                    case 14: return 87178291200;
+                    case 15: return 1307674368000;
+                    case 16: return 20922789888000;
+                    case 17: return 355687428096000;
+                    case 18: return 6402373705728000;
+                    case 19: return 121645100408832000;
+                    case 20: return 2432902008176640000;
+                }
             }
 
-            if (n < 34)
-            {
-                return DoubleFactorialLong(n) / DoubleFactorialLong(r);
-            }
-            else if ((n & 1) == 0 || (r & 1) == 0)
-            {
-                throw new ArgumentException("Double Factorial function does not support even numbers");
-            }
-
-            var result = (BigInteger)n;
-            var upperTerm = (long)n - 2;
-            var lowerTerm = (long)r;
-
-            while (lowerTerm < upperTerm)
-            {
-                result *= lowerTerm * upperTerm;
-                lowerTerm += 2;
-                upperTerm -= 2;
-            }
-
-            if (lowerTerm == upperTerm)
-            {
-                result *= lowerTerm;
-            }
-
-            return result;
+            throw new OverflowException("Factortial of n > 20 cannot fit in Int64");
         }
 
         public static BigInteger FactorialSplitRecursive(int n)
@@ -867,7 +873,7 @@ namespace Boilerplate
             var p = BigInteger.One;
             var r = BigInteger.One;
 
-            int h = 0, high = 0, len = 0,  shift = 0;
+            int h = 0, high = 0, len = 0, shift = 0;
             int log2n = (int)Math.Floor(Math.Log(n) / Math.Log(2));
 
             BigInteger currentN = BigInteger.One;
@@ -915,37 +921,99 @@ namespace Boilerplate
             return fs;
         }
 
-        public static long FactorialLong(long n)
+        public static BigInteger DoubleFactorialBigInteger(int n)
         {
-            if (n < 21)
+            if (n < 34)
             {
-                switch (n)
-                {
-                    case 0: return 1;
-                    case 1: return 1;
-                    case 2: return 2;
-                    case 3: return 6;
-                    case 4: return 24;
-                    case 5: return 120;
-                    case 6: return 720;
-                    case 7: return 5040;
-                    case 8: return 40320;
-                    case 9: return 362880;
-                    case 10: return 3628800;
-                    case 11: return 39916800;
-                    case 12: return 479001600;
-                    case 13: return 6227020800;
-                    case 14: return 87178291200;
-                    case 15: return 1307674368000;
-                    case 16: return 20922789888000;
-                    case 17: return 355687428096000;
-                    case 18: return 6402373705728000;
-                    case 19: return 121645100408832000;
-                    case 20: return 2432902008176640000;
-                }
+                return DoubleFactorialLong(n);
+            }
+            else if ((n & 1) == 0)
+            {
+                throw new ArgumentException("Double Factorial function does not support even numbers");
             }
 
-            throw new OverflowException("Factortial of n > 20 cannot fit in Int64");
+            var result = (BigInteger)n;
+            var upperTerm = (long)n - 2;
+            var lowerTerm = 3L;
+
+            while (lowerTerm < upperTerm)
+            {
+                result *= lowerTerm * upperTerm;
+                lowerTerm += 2;
+                upperTerm -= 2;
+            }
+
+            if (lowerTerm == upperTerm)
+            {
+                result *= lowerTerm;
+            }
+
+            return result;
+        }
+
+        public static BigInteger DoubleFactorialBySummation(int n)
+        {
+            if (n < 34)
+            {
+                return DoubleFactorialLong(n);
+            }
+            else if ((n & 1) == 0)
+            {
+                throw new ArgumentException("Double Factorial function does not support even numbers");
+            }
+
+            var result = (BigInteger)n;
+            var upperTerm = (long)n - 2;
+            var lowerTerm = 3L;
+
+            while (lowerTerm < upperTerm)
+            {
+                result *= lowerTerm * upperTerm;
+                lowerTerm += 2;
+                upperTerm -= 2;
+            }
+
+            if (lowerTerm == upperTerm)
+            {
+                result *= lowerTerm;
+            }
+
+            return result;
+        }
+
+        public static BigInteger DoubleFactorial(int n, int r)
+        {
+            if (r < 3)
+            {
+                return DoubleFactorialBigInteger(n);
+            }
+
+            if (n < 34)
+            {
+                return DoubleFactorialLong(n) / DoubleFactorialLong(r);
+            }
+            else if ((n & 1) == 0 || (r & 1) == 0)
+            {
+                throw new ArgumentException("Double Factorial function does not support even numbers");
+            }
+
+            var result = (BigInteger)n;
+            var upperTerm = (long)n - 2;
+            var lowerTerm = (long)r;
+
+            while (lowerTerm < upperTerm)
+            {
+                result *= lowerTerm * upperTerm;
+                lowerTerm += 2;
+                upperTerm -= 2;
+            }
+
+            if (lowerTerm == upperTerm)
+            {
+                result *= lowerTerm;
+            }
+
+            return result;
         }
 
         public static long DoubleFactorialLong(int n)
