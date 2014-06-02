@@ -526,34 +526,80 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger FactorialCustom3(int n)
+        public static BigInteger FactorialBigInteger2(int n)
         {
             if (n < 21)
             {
                 return FactorialLong(n);
             }
 
-            var minified20Fact = new BigInteger(9280784638125); // 20! / 2^18
+            var result = new BigInteger(9280784638125); // 20! / 2^18
 
-            var result = BigInteger.One;
-            var mid = n >> 1;
+            var oddPairs = BigInteger.One;
+            //var mid = (n - 20) >> 1;
+            var start = 21L;
+
+
+            long mid = n >> 1;
+
+            long upperTerm = ((n & 1) == 0 ? n - 1 : n);
 
             for (long i = 11; i <= mid; i++)
             {
-                result *= i * ((i << 1) - 1);
+                result *= i * upperTerm;
+                upperTerm -= 2;
             }
+
+            var stage1 = new BigInteger[mid];
 
             if ((n & 1) == 1)
             {
-                result *= n;
+                oddPairs = new BigInteger(21);
+                start++;
             }
 
-            var shifts = ((n - 20) >> 1) + 18;
-            result = (result * minified20Fact) << shifts;
+            for (long i = 0; i < mid; i++)
+            {
+                stage1[i] = BigInteger.Multiply(start + i, n - i);
+            }
+
+            var previousStage = stage1;
+            var currentStage = stage1;
+
+            while (mid > 1)
+            {
+                mid >>= 1;
+                start = 0;
+
+                if ((previousStage.Length & 1) == 1)
+                {
+                    oddPairs *= previousStage[0];
+                    start = 1;
+                }
+
+                currentStage = new BigInteger[mid];
+
+                for (int i = 0; i < mid; i++)
+                {
+                    currentStage[i] = BigInteger.Multiply(previousStage[start + i], previousStage[previousStage.Length - i - 1]);
+                }
+
+                previousStage = currentStage;
+            }
+
+            if (!oddPairs.IsOne)
+            {
+                result *= oddPairs;
+            }
+
+            if (currentStage != null && currentStage.Length > 0)
+            {
+                result *= currentStage[0];
+            }
 
             return result;
         }
-
+        
         public static BigInteger FactorialCustom5(int n)
         {
             if (n < 21)
@@ -724,58 +770,6 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger FactorialCustom11(int n)
-        {
-            if (n < 21)
-            {
-                return FactorialLong(n);
-            }
-
-            int segmentEnd, segmentStart, evenSegement;
-            var shifts = 0;
-            var segments = new Stack<int[]>();
-
-            do
-            {
-                if ((n & 1) == 0)
-                {
-                    evenSegement = n;
-                    n--;
-                }
-                else
-                {
-                    evenSegement = 1;
-                }
-                segmentEnd = n;
-                n >>= 1;
-                shifts += n;
-                segmentStart = ((n & 1) == 0 ? n + 1 : n + 2);
-                segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
-            } while (n > 20);
-
-            var segment = segments.Pop();
-            var doubleFactorial = DoubleFactorialBigInteger(segmentEnd);
-            var result = evenSegement * doubleFactorial * FactorialBigInteger(n);
-
-            while (segments.Count > 0)
-            {
-                segment = segments.Pop();
-                doubleFactorial *= DoubleFactorialBigInteger(segment[0], segment[1]);
-                if (segment[2] == 1)
-                {
-                    result *= doubleFactorial;
-                }
-                else
-                {
-                    result *= segment[2] * doubleFactorial;
-                }
-            }
-
-            result <<= shifts;
-
-            return result;
-        }
-
         public static BigInteger FactorialCustom12(int n)
         {
             if (n < 21)
@@ -783,51 +777,164 @@ namespace Boilerplate
                 return FactorialLong(n);
             }
 
-            int segmentEnd, segmentStart, evenSegement;
+            var segmentEnds = new List<int>();
+            var segmentStarts = new List<int>();
+            var evenTerms = new List<int>();
             var shifts = 0;
-            var segments = new Stack<int[]>();
-
-            //TODO: Multiply double factorial lower terms by upper terms
 
             do
             {
                 if ((n & 1) == 0)
                 {
-                    evenSegement = n;
+                    evenTerms.Add(n >> 1);
                     n--;
                 }
-                else
-                {
-                    evenSegement = 1;
-                }
-                segmentEnd = n;
+                segmentEnds.Add(n);
                 n >>= 1;
+                segmentStarts.Add(n + 1 + (n & 1));
                 shifts += n;
-                segmentStart = ((n & 1) == 0 ? n + 1 : n + 2);
-                segments.Push(new int[] { segmentEnd, segmentStart, evenSegement });
             } while (n > 20);
 
-            var segment = segments.Pop();
-            var doubleFactorial = DoubleFactorialBigInteger(segmentEnd);
-            var result = evenSegement * doubleFactorial * FactorialBigInteger(n);
-
-            while (segments.Count > 0)
+            shifts += evenTerms.Count;
+            var evenTermsMult = BigInteger.One;
+            for (int i = 0; i < evenTerms.Count; i++)
             {
-                segment = segments.Pop();
-                doubleFactorial *= DoubleFactorialBigInteger(segment[0], segment[1]);
-                if (segment[2] == 1)
+                evenTermsMult *= evenTerms[i];
+            }
+
+            var baselineFactorial = FactorialLong(n);
+            while ((baselineFactorial & 1) == 0)
+            {
+                baselineFactorial >>= 1;
+                shifts++;
+            }
+
+            long lowerTerm = 3L;
+            var lowerRepeats = segmentStarts.Count;
+            var lowerCounter = 0;
+            long upperTerm = segmentEnds.First();
+            var upperRepeats = 1;
+            var upperCounter = 0;
+            var result = BigInteger.One;
+
+            while (lowerTerm < upperTerm)
+            {
+                result *= lowerTerm * upperTerm;
+                lowerCounter++;
+                upperCounter++;
+
+                if (lowerCounter == lowerRepeats)
                 {
-                    result *= doubleFactorial;
+                    lowerCounter = 0;
+                    lowerTerm += 2;
+                    if (lowerTerm > segmentEnds[lowerRepeats - 1])
+                    {
+                        lowerRepeats--;
+                    }
+                }
+
+                if (upperCounter == upperRepeats)
+                {
+                    upperCounter = 0;
+                    upperTerm -= 2;
+                    if (upperTerm < segmentStarts[upperRepeats - 1])
+                    {
+                        upperRepeats++;
+                    }
+                }
+            }
+            
+            if (lowerTerm == upperTerm)
+            {
+                if (lowerCounter == 0)
+                {
+                    result *= BigInteger.Pow(upperTerm, upperRepeats - upperCounter);
                 }
                 else
                 {
-                    result *= segment[2] * doubleFactorial;
+                    result *= BigInteger.Pow(lowerTerm, lowerRepeats - lowerCounter);
                 }
             }
+
+            result *= evenTermsMult * baselineFactorial;
 
             result <<= shifts;
 
             return result;
+        }
+
+        public static BigInteger FactorialPrimeFactoriazation(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var primes = BoilSequences.PrimesSequenceUpTo(n);
+            var exponents = new int[primes.Count];
+
+            var result = BigInteger.One;
+            
+            for (int i = primes.Count - 1; i >= 1; i--)
+            {
+                var num = n;
+                while (num > 0)
+                {
+                    num /= (int)primes[i];
+                    exponents[i] += num;
+                }
+                result *= BigInteger.Pow(primes[i], exponents[i]);
+            }
+
+
+            var shifts = 0;
+            while (n > 0)
+            {
+                n >>= 1;
+                shifts += n;
+            }
+
+            //var shifts = exponents[0];
+            //var lowerIndex = 1;
+            //long lowerTerm = primes[lowerIndex];
+            //var upperIndex = primes.Count - 1;
+            //long upperTerm = primes[upperIndex];
+
+            //long product = 1;
+            //int repeats = 1;
+
+            //while (lowerIndex < upperIndex)
+            //{
+            //    product = lowerTerm * upperTerm;
+            //    if (exponents[lowerIndex] == exponents[upperIndex])
+            //    {
+            //        repeats = exponents[lowerIndex];
+            //        lowerIndex++;
+            //        upperIndex--;
+            //    }
+            //    else if (exponents[lowerIndex] > exponents[upperIndex])
+            //    {
+            //        repeats = exponents[upperIndex];
+            //        exponents[lowerIndex] -= repeats;
+            //        upperIndex--;
+            //    }
+            //    else
+            //    {
+            //        repeats = exponents[lowerIndex];
+            //        exponents[upperIndex] -= repeats;
+            //        lowerIndex++;
+            //    }
+            //    result *= BigInteger.Pow(product, repeats);
+            //}
+
+            //if (lowerIndex == upperIndex)
+            //{
+            //    result *= BigInteger.Pow(primes[lowerIndex], exponents[lowerIndex]);
+            //}
+
+            result <<= shifts;
+
+            return result;            
         }
 
         public static long FactorialLong(long n)
@@ -981,7 +1088,7 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger DoubleFactorial(int n, int r)
+        public static BigInteger DoubleFactorialBigInteger(int n, int r)
         {
             if (r < 3)
             {
@@ -1047,8 +1154,41 @@ namespace Boilerplate
 
         public static double FactorialStirling(long n)
         {
-            var result = 0d;
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            throw new NotImplementedException("TODO: FacotiralStirling");
+        }
+
+        public static double FactorialStieltjes(long n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var a0 = 1.0 / 12.0;
+            var a1 = 1.0 / 30.0;
+            var a2 = 53.0 / 210.0;
+            var a3 = 195.0 / 371.0;
+            var a4 = 22999.0 / 22737.0;
+            var a5 = 29944523.0 / 19733142.0;
+            var a6 = 109535241009.0 / 48264275462.0;
+            var N = n + 1;
+
+            var result = 0.5 * Math.Log(2 * BoilConstants.pi) + (N - 0.5) * Math.Log(N) - N + a0 / (N + a1 / (N + a2 / (N + a3 / (N + a4 / (N + a5 / (N + a6 / N))))));
+            result = Math.Exp(result);
+
             return result;
         }
+
+        public static double DivideBigIntegersDoublePrecision(BigInteger a, BigInteger b)
+        {
+            var result = Math.Exp(BigInteger.Log(a) - BigInteger.Log(b));
+            return result;
+        }
+        
     }
 }
