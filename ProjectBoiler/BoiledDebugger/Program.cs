@@ -16,31 +16,58 @@ namespace BoiledDebugger
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
-            int r = 200000;
-            int n = 200000;
+            var r = Int64.MaxValue - 5L;
+            var n = Int64.MaxValue - 1L;
 
-            BoilMathFunctions.FactorialCustom12(n);
-            Console.WriteLine("Factorial12: {0}ms", Benchmark(() =>
+            //BoilMathFunctions.FactorialCustom12(n);
+            //Console.WriteLine("Factorial12: {0}ms", Benchmark(() =>
+            //{
+            //    BoilMathFunctions.FactorialCustom12(n);
+            //    //for (var i = r; i <= n; i++)
+            //    //{
+            //    //    var a = BoilMathFunctions.FactorialCustom12(i);
+            //    //    var b = BoilMathFunctions.FactorialPrimeFactoriazation(i);
+            //    //    if (a != b)
+            //    //    {
+            //    //        Console.WriteLine("{0}!: {1}", i, a);
+            //    //        Console.WriteLine("{0}!: {1}", i, b);
+            //    //    }
+            //    //}
+            //}, 1, false));
+
+            //BoilMathFunctions.FactorialPrimeFactoriazation(n);
+            //Console.WriteLine("FactorialPF: {0}ms", Benchmark(() =>
+            //{
+            //    BoilMathFunctions.FactorialPrimeFactoriazation(n);
+            //}, 1, false));
+
+
+
+            BoilMathFunctions.LeastPrimeFactor(100);
+            BoilSequences.PrimeFactorizationWF(100);
+            Console.WriteLine("LeastPrimeFactor: {0}ms", Benchmark(() =>
             {
-                BoilMathFunctions.FactorialCustom12(n);
-                //for (int i = r; i <= n; i++)
-                //{
-                //    var a = BoilMathFunctions.FactorialCustom12(i);
-                //    var b = BoilMathFunctions.FactorialPrimeFactoriazation(i);
-                //    if (a != b)
-                //    {
-                //        Console.WriteLine("{0}!: {1}", i, a);
-                //        Console.WriteLine("{0}!: {1}", i, b);
-                //    }
-                //}
+                for (var i = r; i <= n; i++)
+                {
+                    BoilMathFunctions.LeastPrimeFactor(i);
+                    //var a = BoilMathFunctions.LeastPrimeFactor(i);
+                    //var b = BoilSequences.PrimeFactorizationWF(i).First();
+                    //if (a != b)
+                    //{
+                    //    Console.WriteLine("{0}: {1}, {2}", i, a, b);
+                    //}
+                }
             }, 1, false));
 
-            BoilMathFunctions.FactorialPrimeFactoriazation(n);
-            Console.WriteLine("FactorialPF: {0}ms", Benchmark(() =>
+            BoilSequences.PrimeFactorizationWF(100);
+            Console.WriteLine("PrimeFactorizationWF: {0}ms", Benchmark(() =>
             {
-                BoilMathFunctions.FactorialPrimeFactoriazation(n);
+                for (var i = r; i <= n; i++)
+                {
+                    BoilSequences.PrimeFactorizationWF(i).First();
+                }
             }, 1, false));
-
+            
             //TestBigInteger();
             
             Console.ReadLine();
