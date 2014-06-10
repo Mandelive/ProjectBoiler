@@ -11,12 +11,13 @@ namespace Boilerplate
     {
         public static long ModPow(long b, long e, long n)
         {
+            //TODO: Implement better exponentiation methods and benchmark
             var result = 1L;
             b = b % n;
 
             while (e > 0)
             {
-                if ((e & 1) == 1)
+                if ((e & 1) != 0)
                 {
                     result = (result * b) % n;
                 }
@@ -94,7 +95,7 @@ namespace Boilerplate
             }
         }
 
-        public static long LcmPrimeFactorization(List<long> nums)
+        public static long LcmPrimeFactorization(IEnumerable<long> nums)
         {
             //TODO
             throw new NotImplementedException("TODO");
@@ -506,8 +507,8 @@ namespace Boilerplate
             {
                 return FactorialLong(n);
             }
-
-            var result = new BigInteger(9280784638125); // 20! / 2^18
+            var minified20Factorial = new BigInteger(9280784638125); // 20! / 2^18
+            var result = BigInteger.One;
 
             var oddPairs = BigInteger.One;
             var mid = (n - 20) >> 1;
@@ -515,7 +516,7 @@ namespace Boilerplate
 
             var stage1 = new BigInteger[mid];
 
-            if ((n & 1) == 1)
+            if ((n & 1) != 0)
             {
                 oddPairs = new BigInteger(21);
                 start++;
@@ -534,7 +535,7 @@ namespace Boilerplate
                 mid >>= 1;
                 start = 0;
 
-                if ((previousStage.Length & 1) == 1)
+                if ((previousStage.Length & 1) != 0)
                 {
                     oddPairs *= previousStage[0];
                     start = 1;
@@ -559,6 +560,8 @@ namespace Boilerplate
             {
                 result *= currentStage[0];
             }
+
+            result *= minified20Factorial;
 
             return result;
         }
@@ -570,58 +573,132 @@ namespace Boilerplate
                 return FactorialLong(n);
             }
 
-            var result = new BigInteger(9280784638125); // 20! / 2^18
+            var minified20Fact = new BigInteger(9280784638125); // 20! / 2^18
+
+            var result = BigInteger.One;
 
             var oddPairs = BigInteger.One;
-            //var mid = (n - 20) >> 1;
-            var start = 21L;
+            long upperTerm = n - 1;
 
+            if ((n & 1) != 0)
+            {
+                oddPairs = n;
+                upperTerm--;
+            }
 
+            int index = 0;
+            int count = (n >> 1) - 10;
             long mid = n >> 1;
-
-            long upperTerm = ((n & 1) == 0 ? n - 1 : n);
+           
+            var stage = new BigInteger[count];
 
             for (long i = 11; i <= mid; i++)
             {
-                result *= i * upperTerm;
-                upperTerm -= 2;
+                stage[index] = i * upperTerm;
+                index++;
+                upperTerm -= 2L;
             }
 
-            var stage1 = new BigInteger[mid];
-
-            if ((n & 1) == 1)
+            while (count > 1)
             {
-                oddPairs = new BigInteger(21);
-                start++;
-            }
+                int upperIndex = count - 1;
 
-            for (long i = 0; i < mid; i++)
-            {
-                stage1[i] = BigInteger.Multiply(start + i, n - i);
-            }
-
-            var previousStage = stage1;
-            var currentStage = stage1;
-
-            while (mid > 1)
-            {
-                mid >>= 1;
-                start = 0;
-
-                if ((previousStage.Length & 1) == 1)
+                if ((count & 1) != 0)
                 {
-                    oddPairs *= previousStage[0];
-                    start = 1;
+                    oddPairs *= stage[upperIndex];
+                    upperIndex--;
                 }
 
-                currentStage = new BigInteger[mid];
+                count >>= 1;
 
-                for (int i = 0; i < mid; i++)
+                var previousStage = stage;
+                stage = new BigInteger[count];
+
+                for (int i = 0; i < count; i++)
                 {
-                    currentStage[i] = BigInteger.Multiply(previousStage[start + i], previousStage[previousStage.Length - i - 1]);
+                    stage[i] = previousStage[i] * previousStage[upperIndex];
+                    upperIndex--;
+                }
+            }
+
+            for (int i = 0; i < stage.Length; i++)
+            {
+                result *= stage[i];
+            }
+
+            //if (stage.Length > 0)
+            //{
+            //    result = stage[0];
+            //}
+
+            if (!oddPairs.IsOne)
+            {
+                result *= oddPairs;
+            }
+            
+            var shifts = ((n - 20) >> 1) + 18;
+            result = (result * minified20Fact) << shifts;
+
+            return result;
+        }
+
+        public static BigInteger FactorialBigInteger3(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var minified20Fact = new BigInteger(9280784638125); // 20! / 2^18
+
+            var result = BigInteger.One;
+
+            var oddPairs = BigInteger.One;
+            long upperTerm = n - 1;
+
+            if ((n & 1) != 0)
+            {
+                oddPairs = n;
+                upperTerm--;
+            }
+
+            int index = 0;
+            int count = (n >> 1) - 10;
+            long mid = n >> 1;
+
+            var stage = new BigInteger[count];
+
+            for (long i = 11; i <= mid; i++)
+            {
+                stage[index] = i * upperTerm;
+                index++;
+                upperTerm -= 2L;
+            }
+
+            while (count > 1)
+            {
+                if ((count & 1) != 0)
+                {
+                    oddPairs *= stage.Last();
                 }
 
-                previousStage = currentStage;
+                count >>= 1;
+
+                int downwards = count - 1;
+                int upwards = count;
+
+                var previousStage = stage;
+                stage = new BigInteger[count];
+
+                for (int i = 0; i < count; i++)
+                {
+                    stage[i] = previousStage[downwards--] * previousStage[upwards++];
+                }
+            }
+
+            for (int i = 0; i < stage.Length; i++)
+            {
+                result *= stage[i];
             }
 
             if (!oddPairs.IsOne)
@@ -629,10 +706,8 @@ namespace Boilerplate
                 result *= oddPairs;
             }
 
-            if (currentStage != null && currentStage.Length > 0)
-            {
-                result *= currentStage[0];
-            }
+            var shifts = ((n - 20) >> 1) + 18;
+            result = (result * minified20Fact) << shifts;
 
             return result;
         }
@@ -657,13 +732,90 @@ namespace Boilerplate
                 upperTerm -= 2;
             }
 
-            if ((n & 1) == 1)
+            if ((n & 1) != 0)
             {
                 result *= upperTerm;
             }
 
             var shifts = ((n - 20) >> 1) + 18;
             result = (result * minified20Fact) << shifts;
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom6(int n)
+        {
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var minified20Fact = new BigInteger(9280784638125); // 20! / 2^18
+
+            var result = BigInteger.One;
+            if ((n & 1) != 0)
+            {
+                result = n;
+            }
+
+            long mid = n >> 1;
+            var count = mid - 10;
+
+            long downwards = mid;
+            long upwards = 21L;
+
+            for (int i = 0; i < count; i++)
+            {
+                result *= upwards * downwards;
+                upwards += 2L;
+                downwards--;
+            }
+
+            var shifts = ((n - 20) >> 1) + 18;
+            result = (result * minified20Fact) << shifts;
+
+            return result;
+        }
+
+        public static BigInteger FactorialCustom7(int n)
+        {
+            //TODO: Same as Custom6 but without using minified20Fact
+            if (n < 21)
+            {
+                return FactorialLong(n);
+            }
+
+            var result = BigInteger.One;
+            if ((n & 1) != 0)
+            {
+                result = n;
+            }
+            // 10! = 1 * 3 * 2 * 5 * 3 * 7 * 4 * 9 * 5
+            // 2 * 3 * 4 * 5 * 6  * 7  * 8  * 9
+            // 3 * 5 * 7 * 9 * 11 * 13 * 15 * 17
+            // 
+            // 10 / 2 = 5
+
+            long mid = n >> 1;
+            var count = mid;
+
+            long downwardsA = mid;
+            long upwardsA = downwardsA + 2;
+            long downwardsB = (mid + 1) >> 1;
+            long upwardsB = downwardsB + 1;
+            
+            for (int i = 0; i < count; i++)
+            {
+                result *= downwardsA * upwardsB;
+                result *= downwardsB * upwardsA;
+                downwardsA -= 2L;
+                downwardsB--;
+                upwardsA += 2L;
+                upwardsB++;
+            }
+
+            var shifts = (n >> 1);
+            result = result << shifts;
 
             return result;
         }
@@ -906,36 +1058,6 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger DoubleFactorialBySummation(int n)
-        {
-            if (n < 34)
-            {
-                return DoubleFactorialLong(n);
-            }
-            else if ((n & 1) == 0)
-            {
-                throw new ArgumentException("Double Factorial function does not support even numbers");
-            }
-
-            var result = (BigInteger)n;
-            var upperTerm = (long)n - 2;
-            var lowerTerm = 3L;
-
-            while (lowerTerm < upperTerm)
-            {
-                result *= lowerTerm * upperTerm;
-                lowerTerm += 2;
-                upperTerm -= 2;
-            }
-
-            if (lowerTerm == upperTerm)
-            {
-                result *= lowerTerm;
-            }
-
-            return result;
-        }
-
         public static BigInteger DoubleFactorialBigInteger(int n, int r)
         {
             if (r < 3)
@@ -1032,18 +1154,109 @@ namespace Boilerplate
             return result;
         }
 
-        public static BigInteger ExponentiationBySquaring(BigInteger n, int e)
+        public static long ExpLinear(long n, int e)
+        {
+            var result = 1L;
+            if (n < 0 && (e & 1) != 0 )
+            {
+                result = -1L;
+                n = -n;
+            }
+            for (int i = 0; i < e; i++)
+            {
+                result *= n;
+            }
+            return result;
+        }
+
+        public static long ExpBinary(long n, int e)
+        {
+            switch (e)
+            {
+                case 0: return 1L;
+                case 1: return n;
+            }
+            
+            var result = 1L;
+
+            if (n < 0)
+            {
+                n = -n;
+                if ((e & 1) != 0)
+                {
+                    result = -1L;
+                }
+            }
+
+            var power2 = n;
+
+            while (e > 0)
+            {
+                if ((e & 1) != 0)
+                {
+                    result *= power2;
+                }
+                power2 *= power2;
+                e >>= 1;
+            }
+
+            return result;
+        }
+
+        public static long ExpBySquaring(long n, int e)
         {
             if (e == 0)
             {
                 return 1;
             }
+            else if (e == 1)
+            {
+                return n;
+            }
+
+            var result = 1L;
+            
+            if (n < 0 && (e & 1) != 0)
+            {
+                result = -1L;
+                n = -n;
+            }
+
+            while (e > 1)
+            {
+                if ((e & 1) != 0)
+                {
+                    result *= n;
+                }
+                result *= result;
+                e >>= 1;
+            }
+
+            return result;
+        }
+
+        public static BigInteger ExpBySquaring(BigInteger n, int e)
+        {
+            if (e == 0)
+            {
+                return BigInteger.One;
+            }
+            else if (e == 1)
+            {
+                return n;
+            }
 
             var result = BigInteger.One;
 
-            while (e > 0)
+            if (n.Sign < 0 && (e & 1) != 0)
             {
-                if ((e & 1) == 1)
+                result = -BigInteger.One;
+                n = -n;
+            }
+
+            while (e > 1)
+            {
+                if ((e & 1) != 0)
                 {
                     result *= n;
                     e--;
@@ -1055,10 +1268,152 @@ namespace Boilerplate
             return result;
         }
 
-        public static double DivideBigIntegersDoublePrecision(BigInteger a, BigInteger b)
+        public static double DivideBigIntegersDouble(BigInteger a, BigInteger b)
         {
             var result = Math.Exp(BigInteger.Log(a) - BigInteger.Log(b));
             return result;
+        }
+
+        public static int MaxExponent(long b)
+        {
+            if (b < 0) b = -b;
+            if (b < 2) return Int32.MaxValue;
+            if (b < 10)
+            {
+                switch (b)
+                {
+                    case 2: return 62;
+                    case 3: return 39;
+                    case 4: return 31;
+                    case 5: return 27;
+                    case 6: return 24;
+                    case 7: return 22;
+                    case 8: return 20;
+                    case 9: return 19;
+                }
+            }
+            else if (b < 79)
+            {
+                if (b < 12) return 18;
+                if (b < 14) return 17;
+                if (b < 16) return 16;
+                if (b < 19) return 15;
+                if (b < 23) return 14;
+                if (b < 29) return 13;
+                if (b < 39) return 12;
+                if (b < 53) return 11;
+                return 10;
+            }
+            else
+            {
+                if (b < 128) return 9;
+                if (b < 235) return 8;
+                if (b < 512) return 7;
+                if (b < 1449) return 6;
+                if (b < 6209) return 5;
+                if (b < 55109) return 4;
+                if (b < 2097152) return 3;
+                if (b < 3037000500) return 2;
+                return 1;
+            }
+
+            return 1;
+        }
+
+        public static int MaxExponent2(long b)
+        {
+            if (b < 0) b = -b;
+            if (b < 2) return Int32.MaxValue;
+            if (b < 10)
+            {
+                switch (b)
+                {
+                    case 2: return 62;
+                    case 3: return 39;
+                    case 4: return 31;
+                    case 5: return 27;
+                    case 6: return 24;
+                    case 7: return 22;
+                    case 8: return 20;
+                    case 9: return 19;
+                }
+            }
+            else if (b < 79)
+            {
+                if (b < 12) return 18;
+                if (b < 14) return 17;
+                if (b < 16) return 16;
+                if (b < 19) return 15;
+                if (b < 23) return 14;
+                if (b < 29) return 13;
+                if (b < 39) return 12;
+                if (b < 53) return 11;
+                return 10;
+            }
+            else
+            {
+                if (b > 3037000499) return 1;
+                if (b > 2097151) return 2;
+                if (b > 55108) return 3;
+                if (b > 6208) return 4;
+                if (b > 1448) return 5;
+                if (b > 511) return 6;
+                if (b > 234) return 7;
+                if (b > 127) return 8;
+                return 9;
+            }
+
+            return 1;
+        }
+
+        public static int MaxExponent3(long b)
+        {
+            if (b < 0) b = -b;
+            if (b < 2) return Int32.MaxValue;
+
+            long[] lookupRange = { 3037000499, 2097151, 55108, 6208, 1448, 511, 234, 127, 78, 52, 38, 28, 22, 18, 15, 13, 11,  };
+            int[] lookupValue = { 1, 2, 3, 4, 5, 6, 7, 8, 9,
+
+            if (b < 10)
+            {
+                switch (b)
+                {
+                    case 2: return 62;
+                    case 3: return 39;
+                    case 4: return 31;
+                    case 5: return 27;
+                    case 6: return 24;
+                    case 7: return 22;
+                    case 8: return 20;
+                    case 9: return 19;
+                }
+            }
+            else if (b < 79)
+            {
+                if (b < 12) return 18;
+                if (b < 14) return 17;
+                if (b < 16) return 16;
+                if (b < 19) return 15;
+                if (b < 23) return 14;
+                if (b < 29) return 13;
+                if (b < 39) return 12;
+                if (b < 53) return 11;
+                return 10;
+            }
+            else
+            {
+                if (b > 3037000499) return 1;
+                if (b > 2097151) return 2;
+                if (b > 55108) return 3;
+                if (b > 6208) return 4;
+                if (b > 1448) return 5;
+                if (b > 511) return 6;
+                if (b > 234) return 7;
+                if (b > 127) return 8;
+                return 9;
+            }
+
+            return 1;
         }
         
     }
