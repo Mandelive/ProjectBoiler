@@ -16,57 +16,11 @@ namespace BoiledDebugger
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
-            var r = 0;
-            var n = 3000000;
+            long r = 0;
+            long n = 5000000;
 
-            BoilMathFunctions.MaxExponent3(100);
-            Console.WriteLine("MaxExponent: {0}ms", Benchmark(() =>
-            {
-                //BoilMathFunctions.MaxExponent3(n);
-                for (var i = r; i <= n; i++)
-                {
-                    var a = BoilMathFunctions.MaxExponent3(i);
-                    //var b = BoilMathFunctions.MaxExponent2(i);
-                    //if (a != b)
-                    //{
-                    //    Console.WriteLine("{0}: {1}", i, a);
-                    //    Console.WriteLine("{0}: {1}", i, b);
-                    //}
-                }
-            }, 1, false));
-
-            //BoilMathFunctions.FactorialCustom13(100);
-            //Console.WriteLine("FactorialCustom13: {0}ms", Benchmark(() =>
-            //{
-            //    BoilMathFunctions.FactorialCustom13(n);
-            //}, 1, false));
-
-            //BoilMathFunctions.LeastPrimeFactor(100);
-            //BoilSequences.PrimeFactorizationWF(100);
-            //Console.WriteLine("LeastPrimeFactor: {0}ms", Benchmark(() =>
-            //{
-            //    for (var i = r; i <= n; i++)
-            //    {
-            //        BoilMathFunctions.LeastPrimeFactor(i);
-            //        //var a = BoilMathFunctions.LeastPrimeFactor(i);
-            //        //var b = BoilSequences.PrimeFactorizationWF(i).First();
-            //        //if (a != b)
-            //        //{
-            //        //    Console.WriteLine("{0}: {1}, {2}", i, a, b);
-            //        //}
-            //    }
-            //}, 1, false));
-
-            //BoilSequences.PrimeFactorizationWF(100);
-            //Console.WriteLine("PrimeFactorizationWF: {0}ms", Benchmark(() =>
-            //{
-            //    for (var i = r; i <= n; i++)
-            //    {
-            //        BoilSequences.PrimeFactorizationWF(i).First();
-            //    }
-            //}, 1, false));
-            
-            //TestBigInteger();
+            AssertEqualFor<int>(BoilMathFunctions.MaxExponent, BoilMathFunctions.MaxExponent, r, n, 2);
+            BenchmarkAgainst<int>(BoilMathFunctions.MaxExponent, BoilMathFunctions.MaxExponent, r, n, 2, 1);
             
             Console.ReadLine();
         }
@@ -134,6 +88,119 @@ namespace BoiledDebugger
                     buf1 = mediumNumber * mediumNumber;
                 }
             }, 1, false));
+        }
+
+        static bool AssertEqualFor<T>(Func<long, T> f1, Func<long, T> f2, long s, long e, int verbosity = 0)
+        {
+            bool isTrue = true;
+            for (long i = s; i <= e; i++)
+            {
+                var a = (IComparable)f1(i);
+                var b = (IComparable)f2(i);
+                if (a.CompareTo(b) != 0)
+                {
+                    isTrue = false;
+                    if (verbosity > 1)
+                    {
+                        Console.WriteLine("{0}: {1}", f1.Method.Name + "(" + i.ToString() + ")", a);
+                        Console.WriteLine("{0}: {1}", f2.Method.Name + "(" + i.ToString() + ")", b);
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            if (verbosity > 0)
+            {
+                if (isTrue)
+                {
+                    Console.WriteLine("{0} == {1} for all inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
+                }
+                else
+                {
+                    Console.WriteLine("{0} != {1} for some inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
+                }
+            }
+            return isTrue;
+        }
+
+        static bool AssertEqualFor<T>(Func<int, T> f1, Func<int, T> f2, int s, int e, int verbosity = 0)
+        {
+            bool isTrue = true;
+            for (int i = s; i <= e; i++)
+            {
+                var a = (IComparable)f1(i);
+                var b = (IComparable)f2(i);
+                if (a.CompareTo(b) != 0)
+                {
+                    isTrue = false;
+                    if (verbosity > 1)
+                    {
+                        Console.WriteLine("{0}: {1}", f1.Method.Name + "(" + i.ToString() + ")", a);
+                        Console.WriteLine("{0}: {1}", f2.Method.Name + "(" + i.ToString() + ")", b);
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            if (verbosity > 0)
+            {
+                if (isTrue)
+                {
+                    Console.WriteLine("{0} == {1} for all inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
+                }
+                else
+                {
+                    Console.WriteLine("{0} != {1} for some inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
+                }
+            }
+            return isTrue;
+        }
+
+        static double BenchmarkAgainst<T>(Func<long, T> f1, Func<long, T> f2, long s, long e, int verbosity = 0, long warmup = Int64.MinValue)
+        {
+            double timeDiff = 0.0;
+
+            if (warmup > Int64.MinValue)
+            {
+                f1(warmup);
+                f2(warmup);
+            }
+
+            var a = Benchmark(() =>
+            {
+                for (long i = s; i <= e; i++)
+                {
+                    f1(i);
+                }
+            }, 1, false);
+
+            if (verbosity > 0)
+            {
+                Console.WriteLine("{0} took {1}ms", f1.Method.Name, a);
+            }
+
+            var b = Benchmark(() =>
+            {
+                for (long i = s; i <= e; i++)
+                {
+                    f2(i);
+                }
+            }, 1, false);
+
+            if (verbosity > 0)
+            {
+                Console.WriteLine("{0} took {1}ms", f2.Method.Name, b);
+            }
+
+            timeDiff = a - b;
+
+            return timeDiff;
         }
     }
 }
