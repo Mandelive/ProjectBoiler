@@ -19,10 +19,26 @@ namespace BoiledDebugger
             long r = 0;
             long n = 5000000;
 
-            AssertEqualFor<int>(BoilMathFunctions.MaxExponent, BoilMathFunctions.MaxExponent, r, n, 2);
-            BenchmarkAgainst<int>(BoilMathFunctions.MaxExponent, BoilMathFunctions.MaxExponent, r, n, 2, 1);
+            AssertEqualFor(BoilMathFunctions.MaxExponent, BoilMathFunctions.MaxExponent, Range(r, n), 2);
+            BenchmarkRange(BoilMathFunctions.MaxExponent, r, n, 1, 2L);
             
             Console.ReadLine();
+        }
+
+        static IEnumerable<int> Range(int start, int end)
+        {
+            for (var i = start; i <= end; i++)
+            {
+                yield return i;
+            }
+        }
+
+        static IEnumerable<long> Range(long start, long end)
+        {
+            for (var i = start; i <= end; i++)
+            {
+                yield return i;
+            }
         }
 
         static double Benchmark(Action action, int iterations = 1, bool warmup = false)
@@ -90,13 +106,13 @@ namespace BoiledDebugger
             }, 1, false));
         }
 
-        static bool AssertEqualFor<T>(Func<long, T> f1, Func<long, T> f2, long s, long e, int verbosity = 0)
+        static bool AssertEqualFor<S, R>(Func<S, R> f1, Func<S, R> f2, IEnumerable<S> range, int verbosity = 0) where R : IComparable
         {
             bool isTrue = true;
-            for (long i = s; i <= e; i++)
+            foreach (var i in range)
             {
-                var a = (IComparable)f1(i);
-                var b = (IComparable)f2(i);
+                var a = f1(i);
+                var b = f2(i);
                 if (a.CompareTo(b) != 0)
                 {
                     isTrue = false;
@@ -116,91 +132,60 @@ namespace BoiledDebugger
             {
                 if (isTrue)
                 {
-                    Console.WriteLine("{0} == {1} for all inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
+                    Console.WriteLine("{0} == {1} for all inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, range.First(), range.Last());
                 }
                 else
                 {
-                    Console.WriteLine("{0} != {1} for some inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
+                    Console.WriteLine("{0} != {1} for some inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, range.First(), range.Last());
                 }
             }
             return isTrue;
         }
 
-        static bool AssertEqualFor<T>(Func<int, T> f1, Func<int, T> f2, int s, int e, int verbosity = 0)
+        static double BenchmarkRange<R>(Func<int, R> f1, int start, int end, int verbosity = 0, int? warmup = null)
         {
-            bool isTrue = true;
-            for (int i = s; i <= e; i++)
+            if (warmup.HasValue)
             {
-                var a = (IComparable)f1(i);
-                var b = (IComparable)f2(i);
-                if (a.CompareTo(b) != 0)
-                {
-                    isTrue = false;
-                    if (verbosity > 1)
-                    {
-                        Console.WriteLine("{0}: {1}", f1.Method.Name + "(" + i.ToString() + ")", a);
-                        Console.WriteLine("{0}: {1}", f2.Method.Name + "(" + i.ToString() + ")", b);
-                        Console.WriteLine();
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                f1(warmup.Value);
             }
+
+            var timeElapsed = Benchmark(() =>
+            {
+                for (var i = start; i <= end; i++)
+                {
+                    BoilMathFunctions.MaxExponent(i);
+                }
+            }, 1, false);
+
             if (verbosity > 0)
             {
-                if (isTrue)
-                {
-                    Console.WriteLine("{0} == {1} for all inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
-                }
-                else
-                {
-                    Console.WriteLine("{0} != {1} for some inputs from {2} to {3}", f1.Method.Name, f2.Method.Name, s, e);
-                }
+                Console.WriteLine("{0} took {1}ms for processing values from {2} to {3}", f1.Method.Name, timeElapsed, start, end);
             }
-            return isTrue;
+
+            return timeElapsed;
         }
 
-        static double BenchmarkAgainst<T>(Func<long, T> f1, Func<long, T> f2, long s, long e, int verbosity = 0, long warmup = Int64.MinValue)
+        static double BenchmarkRange<R>(Func<long, R> f1, long start, long end, int verbosity = 0, long? warmup = null)
         {
-            double timeDiff = 0.0;
-
-            if (warmup > Int64.MinValue)
+            if (warmup.HasValue)
             {
-                f1(warmup);
-                f2(warmup);
+                f1(warmup.Value);
             }
 
-            var a = Benchmark(() =>
+            var timeElapsed = Benchmark(() =>
             {
-                for (long i = s; i <= e; i++)
+                for (var i = start; i <= end; i++)
                 {
-                    f1(i);
+                    BoilMathFunctions.MaxExponent(i);
                 }
             }, 1, false);
 
             if (verbosity > 0)
             {
-                Console.WriteLine("{0} took {1}ms", f1.Method.Name, a);
+                Console.WriteLine("{0} took {1}ms for processing values from {2} to {3}", f1.Method.Name, timeElapsed, start, end);
             }
 
-            var b = Benchmark(() =>
-            {
-                for (long i = s; i <= e; i++)
-                {
-                    f2(i);
-                }
-            }, 1, false);
-
-            if (verbosity > 0)
-            {
-                Console.WriteLine("{0} took {1}ms", f2.Method.Name, b);
-            }
-
-            timeDiff = a - b;
-
-            return timeDiff;
+            return timeElapsed;
         }
     }
 }
