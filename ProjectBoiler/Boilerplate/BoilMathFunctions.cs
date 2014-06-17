@@ -1156,12 +1156,13 @@ namespace Boilerplate
 
         public static long ExpLinear(long n, int e)
         {
-            var result = 1L;
-            if (n < 0 && (e & 1) != 0 )
+            switch (e)
             {
-                result = -1L;
-                n = -n;
+                case 0: return 1L;
+                case 1: return n;
             }
+
+            var result = 1L;
             for (int i = 0; i < e; i++)
             {
                 result *= n;
@@ -1205,21 +1206,23 @@ namespace Boilerplate
 
         public static long ExpBySquaring(long n, int e)
         {
-            if (e == 0)
+            switch (e)
             {
-                return 1;
-            }
-            else if (e == 1)
-            {
-                return n;
+                case 0: return 1L;
+                case 1: return n;
             }
 
+            if (n == 0) return 0L;
+
             var result = 1L;
-            
-            if (n < 0 && (e & 1) != 0)
+
+            if (n < 0)
             {
-                result = -1L;
                 n = -n;
+                if ((e & 1) != 0)
+                {
+                    result = -1L;
+                }
             }
 
             while (e > 1)
