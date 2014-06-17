@@ -1139,14 +1139,14 @@ namespace Boilerplate
                 return FactorialLong(n);
             }
 
-            var a0 = 1.0 / 12.0;
-            var a1 = 1.0 / 30.0;
-            var a2 = 53.0 / 210.0;
-            var a3 = 195.0 / 371.0;
-            var a4 = 22999.0 / 22737.0;
-            var a5 = 29944523.0 / 19733142.0;
-            var a6 = 109535241009.0 / 48264275462.0;
-            var N = n + 1;
+            double a0 = 1.0 / 12.0;
+            double a1 = 1.0 / 30.0;
+            double a2 = 53.0 / 210.0;
+            double a3 = 195.0 / 371.0;
+            double a4 = 22999.0 / 22737.0;
+            double a5 = 29944523.0 / 19733142.0;
+            double a6 = 109535241009.0 / 48264275462.0;
+            double N = n + 1;
 
             var result = 0.5 * Math.Log(2 * BoilConstants.pi) + (N - 0.5) * Math.Log(N) - N + a0 / (N + a1 / (N + a2 / (N + a3 / (N + a4 / (N + a5 / (N + a6 / N))))));
             result = Math.Exp(result);
@@ -1204,73 +1204,6 @@ namespace Boilerplate
             return result;
         }
 
-        public static long ExpBySquaring(long n, int e)
-        {
-            switch (e)
-            {
-                case 0: return 1L;
-                case 1: return n;
-            }
-
-            if (n == 0) return 0L;
-
-            var result = 1L;
-
-            if (n < 0)
-            {
-                n = -n;
-                if ((e & 1) != 0)
-                {
-                    result = -1L;
-                }
-            }
-
-            while (e > 1)
-            {
-                if ((e & 1) != 0)
-                {
-                    result *= n;
-                }
-                result *= result;
-                e >>= 1;
-            }
-
-            return result;
-        }
-
-        public static BigInteger ExpBySquaring(BigInteger n, int e)
-        {
-            if (e == 0)
-            {
-                return BigInteger.One;
-            }
-            else if (e == 1)
-            {
-                return n;
-            }
-
-            var result = BigInteger.One;
-
-            if (n.Sign < 0 && (e & 1) != 0)
-            {
-                result = -BigInteger.One;
-                n = -n;
-            }
-
-            while (e > 1)
-            {
-                if ((e & 1) != 0)
-                {
-                    result *= n;
-                    e--;
-                }
-                n *= n;
-                e >>= 1;
-            }
-
-            return result;
-        }
-
         public static double DivideBigIntegersDouble(BigInteger a, BigInteger b)
         {
             var result = Math.Exp(BigInteger.Log(a) - BigInteger.Log(b));
@@ -1310,6 +1243,66 @@ namespace Boilerplate
             else
             {
                 if (b > 3037000499) return 1;
+                if (b > 2097151) return 2;
+                if (b > 55108) return 3;
+                if (b > 6208) return 4;
+                if (b > 1448) return 5;
+                if (b > 511) return 6;
+                if (b > 234) return 7;
+                if (b > 127) return 8;
+                return 9;
+            }
+
+            return 1;
+        }
+
+        public static int MaxExponent2(long b)
+        {
+            if (b < 0) b = -b;
+            if (b < 2) return Int32.MaxValue;
+            if (b > 3037000499) return 1;
+
+            if (b > 511)
+            {
+                if (b > 2097151) return 2;
+                if (b > 55108) return 3;
+                if (b > 6208) return 4;
+                if (b > 1448) return 5;
+                return 6;
+            }
+            else
+            {
+
+            }
+
+            if (b < 10)
+            {
+                switch (b)
+                {
+                    case 2: return 62;
+                    case 3: return 39;
+                    case 4: return 31;
+                    case 5: return 27;
+                    case 6: return 24;
+                    case 7: return 22;
+                    case 8: return 20;
+                    case 9: return 19;
+                }
+            }
+            else if (b < 79)
+            {
+                if (b < 12) return 18;
+                if (b < 14) return 17;
+                if (b < 16) return 16;
+                if (b < 19) return 15;
+                if (b < 23) return 14;
+                if (b < 29) return 13;
+                if (b < 39) return 12;
+                if (b < 53) return 11;
+                return 10;
+            }
+            else
+            {
                 if (b > 2097151) return 2;
                 if (b > 55108) return 3;
                 if (b > 6208) return 4;
