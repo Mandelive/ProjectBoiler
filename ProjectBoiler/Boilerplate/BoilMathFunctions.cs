@@ -1272,48 +1272,51 @@ namespace Boilerplate
             }
             else
             {
-
-            }
-
-            if (b < 10)
-            {
-                switch (b)
+                if (b > 78)
                 {
-                    case 2: return 62;
-                    case 3: return 39;
-                    case 4: return 31;
-                    case 5: return 27;
-                    case 6: return 24;
-                    case 7: return 22;
-                    case 8: return 20;
-                    case 9: return 19;
+                    if (b > 234) return 7;
+                    if (b > 127) return 8;
+                    return 9;
+                }
+                else
+                {
+                    if (b > 11)
+                    {
+                        if (b > 22)
+                        {
+                            if (b > 52) return 10;
+                            if (b > 38) return 11;
+                            if (b > 28) return 12;
+                            return 13;
+                        }
+                        else
+                        {
+                            if (b > 18) return 14;
+                            if (b > 15) return 15;
+                            if (b > 13) return 16;
+                            return 17;
+                        }
+                    }
+                    else
+                    {
+                        if (b > 5)
+                        {
+                            if (b > 9) return 18;
+                            if (b == 9) return 19;
+                            if (b == 8) return 20;
+                            if (b == 7) return 22;
+                            return 24;   
+                        }
+                        else
+                        {
+                            if (b == 5) return 27;
+                            if (b == 4) return 31;
+                            if (b == 3) return 39;
+                            return 62;
+                        }
+                    }
                 }
             }
-            else if (b < 79)
-            {
-                if (b < 12) return 18;
-                if (b < 14) return 17;
-                if (b < 16) return 16;
-                if (b < 19) return 15;
-                if (b < 23) return 14;
-                if (b < 29) return 13;
-                if (b < 39) return 12;
-                if (b < 53) return 11;
-                return 10;
-            }
-            else
-            {
-                if (b > 2097151) return 2;
-                if (b > 55108) return 3;
-                if (b > 6208) return 4;
-                if (b > 1448) return 5;
-                if (b > 511) return 6;
-                if (b > 234) return 7;
-                if (b > 127) return 8;
-                return 9;
-            }
-
-            return 1;
         }
     }
 }
