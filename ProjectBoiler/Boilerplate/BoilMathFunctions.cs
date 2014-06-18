@@ -997,32 +997,29 @@ namespace Boilerplate
 
         public static long FactorialLong(long n)
         {
-            if (n < 21)
+            switch (n)
             {
-                switch (n)
-                {
-                    case 0: return 1;
-                    case 1: return 1;
-                    case 2: return 2;
-                    case 3: return 6;
-                    case 4: return 24;
-                    case 5: return 120;
-                    case 6: return 720;
-                    case 7: return 5040;
-                    case 8: return 40320;
-                    case 9: return 362880;
-                    case 10: return 3628800;
-                    case 11: return 39916800;
-                    case 12: return 479001600;
-                    case 13: return 6227020800;
-                    case 14: return 87178291200;
-                    case 15: return 1307674368000;
-                    case 16: return 20922789888000;
-                    case 17: return 355687428096000;
-                    case 18: return 6402373705728000;
-                    case 19: return 121645100408832000;
-                    case 20: return 2432902008176640000;
-                }
+                case 0: return 1;
+                case 1: return 1;
+                case 2: return 2;
+                case 3: return 6;
+                case 4: return 24;
+                case 5: return 120;
+                case 6: return 720;
+                case 7: return 5040;
+                case 8: return 40320;
+                case 9: return 362880;
+                case 10: return 3628800;
+                case 11: return 39916800;
+                case 12: return 479001600;
+                case 13: return 6227020800;
+                case 14: return 87178291200;
+                case 15: return 1307674368000;
+                case 16: return 20922789888000;
+                case 17: return 355687428096000;
+                case 18: return 6402373705728000;
+                case 19: return 121645100408832000;
+                case 20: return 2432902008176640000;
             }
 
             throw new OverflowException("Factortial of n > 20 cannot fit in Int64");
@@ -1095,40 +1092,32 @@ namespace Boilerplate
 
         public static long DoubleFactorialLong(int n)
         {
-            if (n < 34)
+            switch (n)
             {
-                switch (n)
-                {
-                    case 1: return 1;
-                    case 3: return 3;
-                    case 5: return 15;
-                    case 7: return 105;
-                    case 9: return 945;
-                    case 11: return 10395;
-                    case 13: return 135135;
-                    case 15: return 2027025;
-                    case 17: return 34459425;
-                    case 19: return 654729075;
-                    case 21: return 13749310575;
-                    case 23: return 316234143225;
-                    case 25: return 7905853580625;
-                    case 27: return 213458046676875;
-                    case 29: return 6190283353629375;
-                    case 31: return 191898783962510625;
-                    case 33: return 6332659870762850625;
-                }
+                case 1: return 1;
+                case 3: return 3;
+                case 5: return 15;
+                case 7: return 105;
+                case 9: return 945;
+                case 11: return 10395;
+                case 13: return 135135;
+                case 15: return 2027025;
+                case 17: return 34459425;
+                case 19: return 654729075;
+                case 21: return 13749310575;
+                case 23: return 316234143225;
+                case 25: return 7905853580625;
+                case 27: return 213458046676875;
+                case 29: return 6190283353629375;
+                case 31: return 191898783962510625;
+                case 33: return 6332659870762850625;
             }
 
-            throw new OverflowException("Double Factortial of n > 33 cannot fit in Int64");
+            throw new OverflowException("DoubleFactorialLong is not defined for " + n);
         }
 
         public static double FactorialStirling(long n)
         {
-            if (n < 21)
-            {
-                return FactorialLong(n);
-            }
-
             throw new NotImplementedException("TODO: FacotiralStirling");
         }
 
@@ -1148,25 +1137,34 @@ namespace Boilerplate
             double a6 = 109535241009.0 / 48264275462.0;
             double N = n + 1;
 
-            var result = 0.5 * Math.Log(2 * BoilConstants.pi) + (N - 0.5) * Math.Log(N) - N + a0 / (N + a1 / (N + a2 / (N + a3 / (N + a4 / (N + a5 / (N + a6 / N))))));
-            result = Math.Exp(result);
+            double logFact = 0.5 * Math.Log(2 * BoilConstants.pi) + (N - 0.5) * Math.Log(N) - N + a0 / (N + a1 / (N + a2 / (N + a3 / (N + a4 / (N + a5 / (N + a6 / N))))));
 
-            return result;
+            return Math.Exp(logFact);
         }
 
         public static long ExpLinear(long n, int e)
         {
-            switch (e)
-            {
-                case 0: return 1L;
-                case 1: return n;
-            }
+            if (e == 0) return 1L;
 
-            var result = 1L;
-            for (int i = 0; i < e; i++)
+            var result = n;
+            for (int i = 1; i < e; i++)
             {
                 result *= n;
             }
+
+            return result;
+        }
+
+        public static BigInteger ExpLinear(BigInteger n, int e)
+        {
+            if (e == 0) return BigInteger.One;
+
+            var result = n;
+            for (int i = 1; i < e; i++)
+            {
+                result *= n;
+            }
+
             return result;
         }
 
@@ -1185,7 +1183,7 @@ namespace Boilerplate
                 n = -n;
                 if ((e & 1) != 0)
                 {
-                    result = -1L;
+                    result = -result;
                 }
             }
 
@@ -1204,119 +1202,87 @@ namespace Boilerplate
             return result;
         }
 
-        public static double DivideBigIntegersDouble(BigInteger a, BigInteger b)
+        public static BigInteger ExpBinary(BigInteger n, int e)
         {
-            var result = Math.Exp(BigInteger.Log(a) - BigInteger.Log(b));
+            switch (e)
+            {
+                case 0: return BigInteger.One;
+                case 1: return n;
+            }
+
+            var result = BigInteger.One;
+
+            if (n.Sign < 0)
+            {
+                n = -n;
+                if ((e & 1) != 0)
+                {
+                    result = -result;
+                }
+            }
+
+            var power2 = n;
+
+            while (e > 0)
+            {
+                if ((e & 1) != 0)
+                {
+                    result *= power2;
+                }
+                power2 *= power2;
+                e >>= 1;
+            }
+
             return result;
         }
-        
+
+        public static long ExpDouble(long b, int e)
+        {
+            return (long)Math.Pow(b, e);
+        }
+
+        public static double DivideBigIntegersDouble(BigInteger a, BigInteger b)
+        {
+            return Math.Exp(BigInteger.Log(a) - BigInteger.Log(b));
+        }
+
         public static int MaxExponent(long b)
         {
             if (b < 0) b = -b;
-            if (b < 2) return Int32.MaxValue;
-            if (b < 10)
-            {
-                switch (b)
-                {
-                    case 2: return 62;
-                    case 3: return 39;
-                    case 4: return 31;
-                    case 5: return 27;
-                    case 6: return 24;
-                    case 7: return 22;
-                    case 8: return 20;
-                    case 9: return 19;
-                }
-            }
-            else if (b < 79)
-            {
-                if (b < 12) return 18;
-                if (b < 14) return 17;
-                if (b < 16) return 16;
-                if (b < 19) return 15;
-                if (b < 23) return 14;
-                if (b < 29) return 13;
-                if (b < 39) return 12;
-                if (b < 53) return 11;
-                return 10;
-            }
-            else
-            {
-                if (b > 3037000499) return 1;
-                if (b > 2097151) return 2;
-                if (b > 55108) return 3;
-                if (b > 6208) return 4;
-                if (b > 1448) return 5;
-                if (b > 511) return 6;
-                if (b > 234) return 7;
-                if (b > 127) return 8;
-                return 9;
-            }
 
-            return 1;
-        }
-
-        public static int MaxExponent2(long b)
-        {
-            if (b < 0) b = -b;
-            if (b < 2) return Int32.MaxValue;
             if (b > 3037000499) return 1;
+            if (b > 2097151) return 2;
+            if (b > 55108) return 3;
+            if (b > 6208) return 4;
+            if (b > 1448) return 5;
+            if (b > 511) return 6;
+            if (b > 234) return 7;
+            if (b > 127) return 8;
+            if (b > 78) return 9;
+            if (b > 52) return 10;
+            if (b > 38) return 11;
+            if (b > 28) return 12;
+            if (b > 22) return 13;
+            if (b > 18) return 14;
+            if (b > 15) return 15;
+            if (b > 13) return 16;
+            if (b > 11) return 17;
+            if (b > 9) return 18;
+                
+            switch (b)
+            {
+                case 9: return 19;
+                case 8: return 20;
+                case 7: return 22;
+                case 6: return 24;
+                case 5: return 27;
+                case 4: return 31;
+                case 3: return 39;
+                case 2: return 62;
+            }
 
-            if (b > 511)
-            {
-                if (b > 2097151) return 2;
-                if (b > 55108) return 3;
-                if (b > 6208) return 4;
-                if (b > 1448) return 5;
-                return 6;
-            }
-            else
-            {
-                if (b > 78)
-                {
-                    if (b > 234) return 7;
-                    if (b > 127) return 8;
-                    return 9;
-                }
-                else
-                {
-                    if (b > 11)
-                    {
-                        if (b > 22)
-                        {
-                            if (b > 52) return 10;
-                            if (b > 38) return 11;
-                            if (b > 28) return 12;
-                            return 13;
-                        }
-                        else
-                        {
-                            if (b > 18) return 14;
-                            if (b > 15) return 15;
-                            if (b > 13) return 16;
-                            return 17;
-                        }
-                    }
-                    else
-                    {
-                        if (b > 5)
-                        {
-                            if (b > 9) return 18;
-                            if (b == 9) return 19;
-                            if (b == 8) return 20;
-                            if (b == 7) return 22;
-                            return 24;   
-                        }
-                        else
-                        {
-                            if (b == 5) return 27;
-                            if (b == 4) return 31;
-                            if (b == 3) return 39;
-                            return 62;
-                        }
-                    }
-                }
-            }
+            return Int32.MaxValue;
         }
+
     }
 }

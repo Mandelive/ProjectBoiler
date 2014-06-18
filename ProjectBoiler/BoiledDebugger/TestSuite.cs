@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace BoiledDebugger
 {
@@ -24,7 +25,15 @@ namespace BoiledDebugger
             }
         }
 
-        public static double Benchmark(Action action, int iterations = 1, bool warmup = false)
+        public static IEnumerable<BigInteger> Range(BigInteger start, BigInteger end)
+        {
+            for (BigInteger i = start; i <= end; i++)
+            {
+                yield return i;
+            }
+        }
+
+        public static double Benchmark(Action action, int trials = 1, bool warmup = false)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -36,7 +45,7 @@ namespace BoiledDebugger
             }
 
             var startTime = DateTime.UtcNow;
-            for (int i = 0; i < iterations; i++)
+            for (int i = 0; i < trials; i++)
             {
                 action();
             }
@@ -44,7 +53,7 @@ namespace BoiledDebugger
 
             var totalTime = endTime - startTime;
 
-            return Math.Round(totalTime.TotalMilliseconds / iterations);
+            return Math.Round(totalTime.TotalMilliseconds / trials);
         }
 
         public static bool AssertEqualFor<S, R>(Func<S, R> f1, Func<S, R> f2, IEnumerable<S> range, int verbosity = 0) where R : IComparable<R>
@@ -127,6 +136,18 @@ namespace BoiledDebugger
             return (errorCount == 0 ? true : false);
         }
 
+        public static double BenchmarkAction(Action action, bool warmup = false, int trials = 1, string actionName = "Action", int verbosity = 0)
+        {
+            var timeElapsed = Benchmark(action, trials, warmup);
+
+            if (verbosity > 0)
+            {
+                Console.WriteLine("{0} took {1}ms", actionName, timeElapsed);
+            }
+
+            return timeElapsed;
+        }
+
         public static double BenchmarkValue<S, R>(Func<S, R> func, S value, S? warmup = null, int trials = 1, int verbosity = 0) where S : struct
         {
             if (warmup.HasValue)
@@ -142,6 +163,26 @@ namespace BoiledDebugger
             if (verbosity > 0)
             {
                 Console.WriteLine("{0} took {1}ms for processing value {2}", func.Method.Name, timeElapsed, value);
+            }
+
+            return timeElapsed;
+        }
+
+        public static double BenchmarkValue<S1, S2, R>(Func<S1, S2, R> func, S1 value1, S2 value2, S1? warmup1 = null, S2? warmup2 = null, int trials = 1, int verbosity = 0) where S1 : struct where S2 : struct
+        {
+            if (warmup1.HasValue && warmup2.HasValue)
+            {
+                func(warmup1.Value, warmup2.Value);
+            }
+
+            var timeElapsed = Benchmark(() =>
+            {
+                func(value1, value2);
+            }, trials);
+
+            if (verbosity > 0)
+            {
+                Console.WriteLine("{0} took {1}ms for processing values {2}", func.Method.Name, timeElapsed, "{ " + value1 + ", " + value2 + " }");
             }
 
             return timeElapsed;
