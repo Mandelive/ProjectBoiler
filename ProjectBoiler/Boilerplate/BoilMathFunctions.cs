@@ -368,6 +368,10 @@ namespace Boilerplate
             {
                 return false;
             }
+            else if (n == 31 || n == 73)
+            {
+                return true;
+            }
 
             long[] witnesses;
 
@@ -428,6 +432,10 @@ namespace Boilerplate
             else if ((n & 1L) == 0)
             {
                 return false;
+            }
+            else if (n == 31 || n == 73)
+            {
+                return true;
             }
 
             BigInteger[] witnesses;

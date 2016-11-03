@@ -21,5 +21,20 @@ namespace Boilerplate
             }
             return true;
         }
+
+        public static int CountCharInString(char c, string s)
+        {
+            int count = 0;
+            var charArray = s.ToCharArray();
+
+            for (int i = 0; i < charArray.Length; i++)
+            {
+                if (charArray[i] == c)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 }

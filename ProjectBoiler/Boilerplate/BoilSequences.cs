@@ -74,23 +74,21 @@ namespace Boilerplate
             //TODO:Cache segemented sieve
 
             var primes = new List<long>();
-            if (upperlimit < 2)
+
+            if (upperlimit > 4)
             {
-                return primes;
+                primes.AddRange(new long[] { 2, 3, 5 });
             }
-            primes.Add(2);
-            if (upperlimit < 3)
+            else
             {
-                return primes;
-            }
-            primes.Add(3);
-            if (upperlimit < 5)
-            {
-                return primes;
-            }
-            primes.Add(5);
-            if (upperlimit < 7)
-            {
+                if (upperlimit > 2)
+                {
+                    primes.AddRange(new long[] { 2, 3 });
+                }
+                else if (upperlimit > 1)
+                {
+                    primes.Add(2);
+                }
                 return primes;
             }
 
