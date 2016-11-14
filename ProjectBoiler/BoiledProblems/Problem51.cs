@@ -76,14 +76,14 @@ namespace BoiledProblems
                 if (currKey != ""  && !primeFamily.Contains(currKey))
                 {
                     long memberNum = Int64.Parse(currKey.Replace('x', (char)('0')));
-                    if (memberNum.ToString().Length == currKey.Length && BoilMathFunctions.IsPrimeMillerRabinLong(memberNum))
+                    if (memberNum.ToString().Length == currKey.Length && BoilMathFunctions.IsPrimeHybrid(memberNum))
                     {
                         countPrimes++;
                     }
                     for (int i = 1; i < maxFailures; i++)
                     {
                         memberNum = Int64.Parse(currKey.Replace('x', (char)('0' + i)));
-                        if (BoilMathFunctions.IsPrimeMillerRabinLong(memberNum))
+                        if (BoilMathFunctions.IsPrimeHybrid(memberNum))
                         {
                             countPrimes++;
                         }
@@ -93,7 +93,7 @@ namespace BoiledProblems
                         for (int i = maxFailures; i < 10; i++)
                         {
                             memberNum = Int64.Parse(currKey.Replace('x', (char)('0' + i)));
-                            if (BoilMathFunctions.IsPrimeMillerRabinLong(memberNum))
+                            if (BoilMathFunctions.IsPrimeHybrid(memberNum))
                             {
                                 countPrimes++;
                             }
@@ -113,7 +113,7 @@ namespace BoiledProblems
             for (int i = 0; i < 10; i++)
             {
                 long memberNum = Int64.Parse(currKey.Replace('x', (char)('0' + i)));
-                if (BoilMathFunctions.IsPrimeMillerRabinLong(memberNum) && memberNum.ToString().Length == currKey.Length)
+                if (BoilMathFunctions.IsPrimeHybrid(memberNum) && memberNum.ToString().Length == currKey.Length)
                 {
                     result = memberNum;
                     break;
@@ -123,9 +123,91 @@ namespace BoiledProblems
             return result;
         }
 
+        private long findDigitReplacementPrimeFamily1(int n, int p)
+        {
+            var primesEnum = BoilSequences.PrimeEnumerator().GetEnumerator();
+            long currPrime = primesEnum.Current;
+
+            int maxFailures = 10 - p;
+            int countPrimes = 0;
+            string currKey = "";
+
+            HashSet<string> primeFamily = new HashSet<string>();
+
+            int[] countReps = new int[10];
+
+            while (countPrimes < p)
+            {
+                long digit = 0;
+                long num = currPrime;
+                while (num > 0)
+                {
+                    digit = num % 10;
+                    countReps[digit]++;
+                    num /= 10;
+                }
+
+                currKey = "";
+                for (int i = 0; i < 10; i++)
+                {
+                    if (countReps[i] == n && currKey == "")
+                    {
+                        currKey = currPrime.ToString().Replace((char)('0' + i), 'x');
+                    }
+                    countReps[i] = 0;
+                }
+
+                countPrimes = 0;
+                if (currKey != "" && !primeFamily.Contains(currKey))
+                {
+                    long memberNum = Int64.Parse(currKey.Replace('x', (char)('0')));
+                    if (memberNum.ToString().Length == currKey.Length && BoilMathFunctions.IsPrimeHybrid(memberNum))
+                    {
+                        countPrimes++;
+                    }
+                    for (int i = 1; i < maxFailures; i++)
+                    {
+                        memberNum = Int64.Parse(currKey.Replace('x', (char)('0' + i)));
+                        if (BoilMathFunctions.IsPrimeHybrid(memberNum))
+                        {
+                            countPrimes++;
+                        }
+                    }
+                    if (countPrimes > 0)
+                    {
+                        for (int i = maxFailures; i < 10; i++)
+                        {
+                            memberNum = Int64.Parse(currKey.Replace('x', (char)('0' + i)));
+                            if (BoilMathFunctions.IsPrimeHybrid(memberNum))
+                            {
+                                countPrimes++;
+                            }
+                        }
+                    }
+                    primeFamily.Add(currKey);
+                }
+
+                primesEnum.MoveNext();
+                currPrime = primesEnum.Current;
+            }
+
+            long result = 0L;
+            for (int i = 0; i < 10; i++)
+            {
+                long memberNum = Int64.Parse(currKey.Replace('x', (char)('0' + i)));
+                if (BoilMathFunctions.IsPrimeHybrid(memberNum) && memberNum.ToString().Length == currKey.Length)
+                {
+                    result = memberNum;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         private long findDigitReplacementPrimeFamily2(int n, int p)
         {
-            var primes = new SortedSet<long>(BoilSequences.PrimesSequenceUpTo(1000000));
+            var primes = new HashSet<long>(BoilSequences.PrimesSequenceUpTo(1000000));
             
             var primeFamilies = new SortedSet<string>();
             foreach (var prime in primes)
@@ -133,13 +215,13 @@ namespace BoiledProblems
                 var mask = maskOfFirstExactRepeatedDigit(prime, n);
                 if (mask != null)
                 {
-                    primeFamilies.Add(mask.PadLeft(6));
+                    primeFamilies.Add(mask.PadLeft(7));
                 }
             }
 
             
             long result = -1;
-
+            
             foreach (var family in primeFamilies)
             {
                 int maxFailures = 11 - p;
@@ -185,28 +267,6 @@ namespace BoiledProblems
             }
 
             return result;
-        }
-
-        private bool hasEnoughRepeatedDigits(long n, int r)
-        {
-            var countDigits = new int[10];
-
-            long digit = 0;
-            while (n > 0)
-            {
-                digit = n % 10;
-                countDigits[digit]++;
-                n /= 10;
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                if (countDigits[i] >= r)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private string maskOfFirstExactRepeatedDigit(long n, int r)

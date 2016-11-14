@@ -11,6 +11,7 @@ using System.Reflection;
 using System.IO;
 using System.Threading;
 using BoiledProblems;
+using System.Diagnostics;
 
 namespace ProjectBoiler
 {
@@ -25,6 +26,8 @@ namespace ProjectBoiler
 
         private void Main_Load(object sender, EventArgs e)
         {
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+
             if (Screen.GetWorkingArea(this).Width > 1280)
             {
                 this.Width = 1280;

@@ -21,12 +21,14 @@ namespace BoiledProblems
 
             parametersInfo = new string[]
             {
-                "n:num - nth permutation"    
+                "n:num - nth permutation",
+                "t:str - first term"   
             };
 
             defaultParameters = new string[]
             {
-                "1000000"
+                "1000000",
+                "0123456789"
             };
 
             ResetParameters();
@@ -34,15 +36,16 @@ namespace BoiledProblems
 
         public override string Solve()
         {
-            var n = Int64.Parse(parameters[0]);
-            return findLexicographicPermutation(n).ToString();
+            var n = Int32.Parse(parameters[0]);
+            var t = parameters[1];
+            return findLexicographicPermutation(n, t);
         }
 
-        private long findLexicographicPermutation(long n)
+        private string findLexicographicPermutation(int n, string t)
         {
-            var result = 0L;
-
-            return result;
+            var perms = BoilSequences.PermutationsEnumerator(t, n).GetEnumerator();
+            perms.MoveNext();
+            return perms.Current;
         }
     }
 }

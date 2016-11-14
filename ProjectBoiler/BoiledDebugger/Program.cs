@@ -16,8 +16,28 @@ namespace BoiledDebugger
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
-            
-            
+
+            //Console.WriteLine();
+
+            //perms = BoilExperimental.GeneratePermutationsQuick(numstr);
+
+            //foreach (var p in perms)
+            //{
+            //    Console.WriteLine(p);
+            //}
+
+
+            //var primesEnum = BoilSequences.PrimeAdhocGenerator().GetEnumerator();
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    primesEnum.MoveNext();
+            //    if (primesEnum.Current < 0)
+            //    {
+            //        Console.Write("{0}, ", -primesEnum.Current);
+            //    }
+            //}
+
             //BigInteger b0 = 0;
             //BigInteger b1 = 10000;
             //int e0 = 0;
@@ -35,19 +55,23 @@ namespace BoiledDebugger
             //        }
             //    }
             //});
-            //TestSuite.AssertEqualFor(BoilMathFunctions., BoilMathFunctions.ExpDouble, TestSuite.Range(-1448L, 1448L), TestSuite.Range(0, 4), 2);
-            
+
+            //TestSuite.AssertEqualFor(BoilSequences.PrimeAdhocGenerator, BoilExperimental.PrimeAdhocGenerator2, TestSuite.Range(0, 2000000), 2);
+
+            //var lowerlimit = 0;
+            //var upperlimit = 31000000;
+            //var reps = 5;
 
             //TestSuite.BenchmarkAction(() =>
             //{
-            //    for (BigInteger i = b0; i <= b1; i++)
+            //    for (int r = 0; r < reps; r++)
             //    {
-            //        for (int j = e0; j <= e1; j++)
+            //        for (var i = lowerlimit; i < 2; i++)
             //        {
-            //            BoilMathFunctions.ExpLinear(i, j);
+            //            var gg = BoilSequences.PrimesSequenceUpTo(upperlimit);
             //        }
             //    }
-            //}, false, 1, "ExpLinear", 1);
+            //}, true, 3, "PrimesSequenceUpTo", 1);
 
             //TestSuite.BenchmarkAction(() =>
             //{
@@ -76,8 +100,8 @@ namespace BoiledDebugger
             //TestSuite.AssertEqualFor(BoilMathFunctions.MaxExponent2, BoilMathFunctions.MaxExponent3 TestSuite.Range(n0, n1), 2);
             //TestSuite.BenchmarkRange(BoilMathFunctions.MaxExponent2, n0, n1, n0, 1, 1);
             //TestSuite.BenchmarkRange(BoilMathFunctions.MaxExponent, n0, n1, n0, 1, 1);
-            
-            Console.ReadLine();
+
+            //Console.ReadLine();
         }
 
     }
