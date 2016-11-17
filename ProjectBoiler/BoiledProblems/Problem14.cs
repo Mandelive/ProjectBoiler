@@ -38,9 +38,9 @@ namespace BoiledProblems
         {
             var collatzLookup = new int[n];
 
-            for (int i = 1; i < collatzLookup.Length; i++)
+            for (int i = 1; i < n; i++)
             {
-                long collatz = ((i & 1) == 0 ? i >> 1 : 3L * i + 1);
+                long collatz = ((i & 1) == 0 ? i >> 1 : 3L * i + 1L);
                 
                 collatzLookup[i] = 1;
 
@@ -62,7 +62,7 @@ namespace BoiledProblems
             var max = 0L;
             var result = 0;
 
-            for (int i = 1; i < n; i += 2)
+            for (int i = (n >> 1) | 1; i < n; i += 2)
             {
                 if (collatzLookup[i] > max)
                 {

@@ -16,7 +16,6 @@ namespace BoiledDebugger
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
-
             //Console.WriteLine();
 
             //perms = BoilExperimental.GeneratePermutationsQuick(numstr);
