@@ -151,7 +151,79 @@ namespace ProjectBoiler
         private void btnSolve_Click(object sender, EventArgs e)
         {
             txtParam1.Focus();
-            BenchmarkProblemSolving();
+            if (currentProblem == null)
+            {
+                BenchmarkAllProblemSolving();
+            }
+            else
+            {
+                BenchmarkProblemSolving();
+            }
+        }
+
+        private async void BenchmarkAllProblemSolving()
+        {
+            var problems = new List<IProblem>();
+
+            for (int i = 0; i < tvProblems.Nodes[0].Nodes.Count; i++)
+            {
+                var selectedProblemNumber = Int32.Parse(tvProblems.Nodes[0].Nodes[i].Name.Substring(0, 3));
+                var problemType = (from t in Assembly.GetAssembly(typeof(BoiledProblems.IProblem)).GetTypes()
+                                   where t.IsClass && t.Name == ("Problem" + selectedProblemNumber)
+                                   select t).First();
+                problems.Add((IProblem)Activator.CreateInstance(problemType));
+            }
+
+            var overallTime = new TimeSpan();
+            var countSuccess = 0;
+            
+            foreach (var problem in problems)
+            {
+                WriteToConsole("span", "Solving Problem " + problem.Id.ToString() + ": ", true);
+                WriteToConsole("span", problem.Title, "font-weight: bold;");
+                WriteToConsole("br");
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                try
+                {
+                    var startTime = DateTime.UtcNow;
+                    var t = new Task<string>(() => problem.Solve());
+                    t.Start();
+                    var result = await t;
+                    var endTime = DateTime.UtcNow;
+
+                    var totalTime = endTime - startTime;
+                    overallTime += totalTime;
+                    countSuccess++;
+
+                    WriteToConsole("span", "Answer: ", true);
+                    WriteToConsole("span", result);
+                    WriteToConsole("br");
+
+                    WriteToConsole("span", "Time elapsed: ", true);
+                    WriteToConsole("span", $"{Math.Round(totalTime.TotalMilliseconds,0)}ms");
+                    WriteToConsole("br");
+                    WriteToConsole("br");
+                }
+                catch (Exception e)
+                {
+                    WriteToConsole("br");
+                    WriteToConsole("span", "ERROR: ", true);
+                    WriteToConsole("span", e.Message);
+                    WriteToConsole("br");
+                    WriteToConsole("br");
+                }
+            }
+
+            WriteToConsole("span", $"Solved {countSuccess} problems successfuly in {Math.Round(overallTime.TotalMilliseconds,0)}ms", true);
+            WriteToConsole("br");
+            if (countSuccess < problems.Count)
+            {
+                WriteToConsole("span", $"{problems.Count - countSuccess} problems failed during the process.", true);
+            }
         }
 
         private async void BenchmarkProblemSolving()
@@ -217,7 +289,7 @@ namespace ProjectBoiler
                 WriteToConsole("br");
 
                 WriteToConsole("span", "Time elapsed: ", true);
-                WriteToConsole("span", Math.Round(totalTime.TotalMilliseconds / 1000d, 3).ToString("0.000s"));
+                WriteToConsole("span", $"{Math.Round(totalTime.TotalMilliseconds, 0)}ms");
                 WriteToConsole("br");
                 WriteToConsole("br");
             }
@@ -248,7 +320,8 @@ namespace ProjectBoiler
                 consoleBrowser.Document.Body.InnerText = "";
                 ChangeProblem();
                 InitializeDefaultParameters();
-                btnSolve.Enabled = true;
+                btnSolve.Text = "Solve";
+                btnDefaultParams.Enabled = true;
             }
             else
             {
@@ -258,7 +331,8 @@ namespace ProjectBoiler
                 }
                 ClearCurrentProblem();
                 ClearParameters();
-                btnSolve.Enabled = false;
+                btnSolve.Text = "Solve All";
+                btnDefaultParams.Enabled = false;
             }
         }
 

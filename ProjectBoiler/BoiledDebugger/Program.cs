@@ -16,6 +16,22 @@ namespace BoiledDebugger
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
+            long upperlimit = 1000000;
+            long range = 1000;
+
+            TestSuite.BenchmarkAction(() =>
+            {
+                var ggList = new HashSet<long>(BoilSequences.PrimesSequenceUpTo(upperlimit));
+                for (long i = 0; i < range; i++)
+                {
+                    ggList.Contains(i);
+                }
+            }, true, 1, "PrimesSequenceUpToList", 1);
+
+
+            
+
+
             //Console.WriteLine();
 
             //perms = BoilExperimental.GeneratePermutationsQuick(numstr);
