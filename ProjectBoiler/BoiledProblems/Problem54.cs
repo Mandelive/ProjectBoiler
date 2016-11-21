@@ -34,9 +34,6 @@ namespace BoiledProblems
             var f = parameters[0];
             return findPokerHandsWon(f).ToString();
         }
-
-        private enum Cards { Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
-        private enum Suits { Clubs, Spades, Hearts, Diamonds };
         
         private long findPokerHandsWon(string f)
         {
@@ -47,62 +44,322 @@ namespace BoiledProblems
                 pokerGames = sr.ReadToEnd().Split(new char[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             }
 
-            var numOfGames = pokerGames.Length;
+            var numOfCards = pokerGames.Length;
+            var numOfGames = numOfCards / 10;
 
-            var player1 = new List<KeyValuePair<Suits, Cards>>(numOfGames);
-            var player2 = new List<KeyValuePair<Suits, Cards>>(numOfGames);
+            var cards = new char[5];
 
+            var countP1Won = 0;
 
-            var currPlayer = player1;
-            for (int i = 0; i < numOfGames; i++)
-            {
-                if (i % 5 == 0)
+            for (int i = 0; i < numOfCards; i += 10)
+            {    
+                var p1Flush = true;
+                for (int j = 0; j < 5; j++)
                 {
-                    if ((i & 1) == 0)
+                    cards[j] = translateCard(pokerGames[i + j][0]);
+
+                    if (j > 0 && pokerGames[i + j][1] != pokerGames[i + j - 1][1])
                     {
-                        currPlayer = player1;
+                        p1Flush = false;
+                    }
+                }
+                var p1Cards = cards.OrderByDescending(c => c).ToArray();
+                var p1Pairs = (p1Flush? 0 : hasPairs(p1Cards));
+
+                var p2Flush = true;
+                for (int j = 0; j < 5; j++)
+                {
+                    cards[j] = translateCard(pokerGames[i + j + 5][0]);
+
+                    if (j > 0 && pokerGames[i + j + 5][1] != pokerGames[i + j + 4][1])
+                    {
+                        p2Flush = false;
+                    }
+                }
+                var p2Cards = cards.OrderByDescending(c => c).ToArray();
+                var p2Pairs = (p2Flush? 0 : hasPairs(p2Cards));
+
+                var p1Won = false;
+                if (p1Flush)
+                {
+                    if (p2Flush)
+                    {
+                        if (isStraight(p1Cards))
+                        {
+                            if (isStraight(p2Cards))
+                            {
+                                if (isPlayer1Higher(p1Cards, p2Cards))
+                                {
+                                    p1Won = true;
+                                }
+                            }
+                            else
+                            {
+                                p1Won = true;
+                            }
+                        }
+                        else if (!isStraight(p2Cards))
+                        {
+                            if (isPlayer1Higher(p1Cards, p2Cards))
+                            {
+                                p1Won = true;
+                            }
+                        }
+                    }
+                    else if (p2Pairs > 3)
+                    {
+                        if (isStraight(p1Cards))
+                        {
+                            p1Won = true;
+                        }
                     }
                     else
                     {
-                        currPlayer = player2;
+                        p1Won = true;
                     }
-                }
-
-                var cc = pokerGames[i][0];
-                var cs = pokerGames[i][1];
-
-                Cards card = Cards.Two;
-                if (cc < 'A')
-                {
-                    card = (Cards)(cc - '0');
                 }
                 else
                 {
-                    switch (cc)
+                    if (isStraight(p1Cards))
                     {
-                        case 'T': card = Cards.Ten; break;
-                        case 'J': card = Cards.Jack; break;
-                        case 'Q': card = Cards.Queen; break;
-                        case 'K': card = Cards.King; break;
-                        case 'A': card = Cards.Ace; break;
+                        if (isStraight(p2Cards))
+                        {
+                            if (isPlayer1Higher(p1Cards, p2Cards))
+                            {
+                                p1Won = true;
+                            }
+                        }
+                        else if (p2Pairs < 4)
+                        {
+                            p1Won = true;
+                        }
+                    }
+                    else if (p2Flush || isStraight(p2Cards))
+                    {
+                        if (p1Pairs > 3)
+                        {
+                            p1Won = true;
+                        }
+                    }
+                    else if (p1Pairs > p2Pairs)
+                    {
+                        p1Won = true;
+                    }
+                    else if (p1Pairs == p2Pairs)
+                    {
+                        if (p1Pairs > 0)
+                        {
+                            if (isPlayer1HigherPair(p1Cards, p2Cards, p1Pairs))
+                            {
+                                p1Won = true;
+                            }
+                        }
+                        else if (isPlayer1Higher(p1Cards, p2Cards))
+                        {
+                            p1Won = true;
+                        }
                     }
                 }
 
-                Suits suit = Suits.Clubs;
-                switch (cs)
+                if (p1Won)
                 {
-                    case 'C': suit = Suits.Clubs; break;
-                    case 'S': suit = Suits.Spades; break;
-                    case 'H': suit = Suits.Hearts; break;
-                    case 'D': suit = Suits.Diamonds; break;
+                    countP1Won++;
                 }
-
-                currPlayer.Add(new KeyValuePair<Suits, Cards>(suit, card));
             }
 
-            
-            
-            return (int)player1[3].Value;
+            return countP1Won;
         }
+
+        private char translateCard(char cc)
+        {
+            if (cc < 'A')
+            {
+                return cc;
+            }
+            else
+            {
+                switch (cc)
+                {
+                    case 'T': return (char)('0' + 10);
+                    case 'J': return (char)('0' + 11);
+                    case 'Q': return (char)('0' + 12);
+                    case 'K': return (char)('0' + 13);
+                    case 'A': return (char)('0' + 14);
+                }
+            }
+            throw new InvalidOperationException();
+        }
+
+        private bool isStraight(char[] cards)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (cards[i] - cards[i + 1] != 1)
+                {
+                    return false; //not straight
+                }
+            }
+            return true;
+        }
+
+        private int hasPairs(char[] cards)
+        {
+            var count = new byte[13];
+
+            for (int i = 0; i < 5; i++)
+            {
+                count[cards[i] - '2']++;
+            }
+            var pairs = 0;
+            var three = false;
+
+            for (int i = 0; i < 13; i++)
+            {
+                if (count[i] < 2)
+                {
+                    continue;
+                }
+                else if (count[i] == 2)
+                {
+                    pairs++;
+                }
+                else if (count[i] == 3)
+                {
+                    three = true;
+                }
+                else if (count[i] == 4)
+                {
+                    return 5; //four of a kind
+                }
+            }
+
+            if (three)
+            {
+                if (pairs == 1)
+                {
+                    return 4; //full house
+                }
+                return 3; //three of a kind
+            }
+
+            return pairs; //two, one or no pairs
+        }
+
+        private bool isPlayer1Higher(char[] p1Cards, char[] p2Cards)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (p1Cards[i] > p2Cards[i])
+                {
+                    return true;
+                }
+                else if (p2Cards[i] > p1Cards[i])
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        private bool isPlayer1HigherPair(char[] p1Cards, char[] p2Cards, int pairLevel)
+        {
+            var p1Count = new byte[13];
+            var p2Count = new byte[13];
+
+            for (int i = 0; i < 5; i++)
+            {
+                p1Count[p1Cards[i] - '2']++;
+                p2Count[p2Cards[i] - '2']++;
+            }
+
+            if (pairLevel == 4)
+            {
+                var p1High = Array.IndexOf<byte>(p1Count, 3);
+                var p2High = Array.IndexOf<byte>(p2Count, 3);
+
+                if (p1High > p2High)
+                {
+                    return true;
+                }
+                else if (p1High == p2High)
+                {
+                    p1High = Array.IndexOf<byte>(p1Count, 2);
+                    p2High = Array.IndexOf<byte>(p2Count, 2);
+
+                    if (p1High > p2High)
+                    {
+                        return true;
+                    }
+                    else if (p1High == p2High)
+                    {
+                        return isPlayer1Higher(p1Cards, p2Cards);
+                    }
+                }
+            }
+            else if (pairLevel == 2)
+            {
+                var p1A = Array.IndexOf<byte>(p1Count, 2);
+                var p1B = Array.LastIndexOf<byte>(p1Count, 2);
+                if (p1B > p1A)
+                {
+                    var t = p1A;
+                    p1A = p1B;
+                    p1B = t;
+                }
+
+                var p2A = Array.IndexOf<byte>(p2Count, 2);
+                var p2B = Array.LastIndexOf<byte>(p2Count, 2);
+                if (p2B > p2A)
+                {
+                    var t = p2A;
+                    p2A = p2B;
+                    p2B = t;
+                }
+
+                if (p1A > p2A)
+                {
+                    return true;
+                }
+                else if (p1A == p2A)
+                {
+                    if (p1B > p2B)
+                    {
+                        return true;
+                    }
+                    else if (p1B == p2B)
+                    {
+                        return isPlayer1Higher(p1Cards, p2Cards);
+                    }
+                }
+            }
+            else
+            {
+                var pairLen = (byte)pairLevel;
+                if (pairLevel == 5)
+                {
+                    pairLen = 4;
+                }
+                else if (pairLevel == 1)
+                {
+                    pairLen = 2;
+                }
+
+                var p1High = Array.IndexOf<byte>(p1Count, pairLen);
+                var p2High = Array.IndexOf<byte>(p2Count, pairLen);
+
+                if (p1High > p2High)
+                {
+                    return true;
+                }
+                else if (p1High == p2High)
+                {
+                    return isPlayer1Higher(p1Cards, p2Cards);
+                }
+            }
+
+            return false;
+        }
+
     }
 }
